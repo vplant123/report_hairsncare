@@ -1,0 +1,45 @@
+import { useState } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import LandingPage from "./pages/LandingPage";
+import Report from "./Rpage/Report.jsx";
+import DoctorAnalysis from "./Reports/DoctorAnalysis";
+import ManagementReport from "./Reports/managementReport/index.jsx";
+import "./App.css";
+// import "./doctor-dashboard/A"
+import PatientTestResult from "./doctor-dashboard/PatientTestResult.jsx";
+import Analysis from "./doctor-dashboard/Analysis.jsx";
+import PrescriptionOnly from "./doctor-dashboard/PrescriptionOnly.jsx";
+// import DoctorNavbar from "./doctor-dashboard/DoctorNavbar.jsx";
+function App() {
+  const [queryClient] = useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <BrowserRouter>
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/" element={<LandingPage />} />
+
+          {/* Protected Routes */}
+          <Route path="/doctor/report/:id" element={<Report />} />
+          <Route
+            path="/doctor-analyse-report/:id"
+            element={<DoctorAnalysis />}
+          />
+          <Route path="/management-report/:id" element={<ManagementReport />} />
+          <Route
+            path="/patient-test-result/:id"
+            element={<PatientTestResult />}
+          />
+          <Route path="/analysis/:id" element={<Analysis />} />
+
+          <Route path="/Prescription-Only/:id" element={<PrescriptionOnly />} />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
+  );
+}
+
+export default App;
