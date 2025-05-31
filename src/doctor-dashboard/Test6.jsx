@@ -203,12 +203,7 @@ let kits = [
 
 // import { fetchAllProduct } from "../../products/ProductsApi";
 
-export default function Test6({
-  selectedOptions,
-  // setSelectedOptions,
-  // selectedTests,
-  // setSelectedTests,
-}) {
+export default function Test6({ selectedOptions, setSelectedOptions }) {
   const [currentKits, setCurrentKits] = useState([]);
   const [prescriptions, setPrescriptions] = useState({});
   const [newMedicine, setNewMedicine] = useState("");
@@ -219,7 +214,7 @@ export default function Test6({
   useEffect(() => {
     if (selectedOptions?.medicines?.length > 0) {
       const initialPrescriptions = {};
-      selectedOptions.medicines.forEach(medicine => {
+      selectedOptions.medicines.forEach((medicine) => {
         initialPrescriptions[medicine.name] = {
           route: medicine.route || "Oral",
           subCategory: medicine.subCategory || "Tablets",
@@ -236,34 +231,6 @@ export default function Test6({
   }, [selectedOptions]);
 
   useEffect(() => {
-    const defaultValues = {
-      route: "Oral",
-      subCategory: "Tablets",
-      quantity: "1",
-      dosage: "",
-      frequency: "Daily at night",
-      when: "Before food",
-      duration: "1 month",
-      instructions: "",
-    };
-
-    const allMedicines = currentKits
-      .flatMap(kit => (kit.kit.length > 0 ? kit.kit : kit.name))
-      .concat(addedMedicines);
-
-    let initialPrescriptions = { ...prescriptions };
-
-    for (let index = 0; index < allMedicines.length; index++) {
-      const element = allMedicines[index];
-      if (!initialPrescriptions[element]) {
-        initialPrescriptions[element] = defaultValues;
-      }
-    }
-
-    setPrescriptions(initialPrescriptions);
-  }, [currentKits, addedMedicines]);
-
-  useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${BASE_URL}/admin/product`);
@@ -272,9 +239,9 @@ export default function Test6({
 
         // Pre-select medicines from selectedOptions
         if (selectedOptions?.medicines?.length > 0) {
-          const preSelectedKits = data.message.filter(kit =>
+          const preSelectedKits = data.message.filter((kit) =>
             selectedOptions.medicines.some(
-              medicine =>
+              (medicine) =>
                 medicine.name === kit.name || kit.kit.includes(medicine.name)
             )
           );
@@ -288,93 +255,36 @@ export default function Test6({
     fetchProducts();
   }, [selectedOptions]);
 
-  const handleCheckboxChange = kit => {
-    setCurrentKits(prev =>
-      prev.some(selectedKit => selectedKit._id === kit._id)
-        ? prev.filter(selectedKit => selectedKit._id !== kit._id)
+  const handleCheckboxChange = (kit) => {
+    setCurrentKits((prev) =>
+      prev.some((selectedKit) => selectedKit._id === kit._id)
+        ? prev.filter((selectedKit) => selectedKit._id !== kit._id)
         : [...prev, kit]
     );
   };
 
   const savePrescription = () => {
-    const formattedMedicines = currentKits
-      .map(kit => {
-        const medicineNames = kit.kit.length > 0 ? kit.kit : [kit.name];
-        return medicineNames.map(medicineName => ({
-          name: medicineName,
-          ...prescriptions[medicineName],
-          price: kit.price,
-          description: kit.description,
-        }));
-      })
-      .flat();
-
-    setSelectedOptions(prev => ({
-      ...prev,
-      medicines: formattedMedicines,
+    // Only update the medicines that are in selectedOptions
+    const formattedMedicines = selectedOptions.medicines.map((medicine) => ({
+      ...medicine,
+      ...prescriptions[medicine.name],
     }));
-    toast.success("Medicine added in prescription");
-  };
 
-  const handleMainCheckboxChange = test => {
-    setSelectedTests(prev => {
-      const updatedMainTests = prev.mainTests.includes(test)
-        ? prev.mainTests.filter(item => item !== test)
-        : [...prev.mainTests, test];
-
-      return {
+    if (setSelectedOptions) {
+      setSelectedOptions((prev) => ({
         ...prev,
-        mainTests: updatedMainTests,
-      };
-    });
-  };
-
-  const handleSubCheckboxChange = (mainTest, subTest) => {
-    setSelectedTests(prev => {
-      const updatedSubTests = prev.subTests[mainTest]?.includes(subTest)
-        ? {
-            ...prev.subTests,
-            [mainTest]: prev.subTests[mainTest].filter(
-              item => item !== subTest
-            ),
-          }
-        : {
-            ...prev.subTests,
-            [mainTest]: [...(prev.subTests[mainTest] || []), subTest],
-          };
-
-      return {
-        ...prev,
-        subTests: updatedSubTests,
-      };
-    });
+        medicines: formattedMedicines,
+      }));
+    }
+    toast.success("Medicine instructions updated in prescription");
   };
 
   const handleAddMedicine = () => {
     if (newMedicine.trim()) {
-      setAddedMedicines(prev => [...prev, newMedicine.trim()]);
+      setAddedMedicines((prev) => [...prev, newMedicine.trim()]);
       setNewMedicine("");
     }
   };
-
-  const tests = [
-    "CBC",
-    "HBA1C",
-    "LFT",
-    "KFT",
-    "Lipid Profile",
-    "T3",
-    "T4",
-    "TSH",
-    "S. Ferritin",
-    "S. Iron",
-    "S. Folate",
-    "S. Vit B12",
-    "S. Vit D3",
-    "Blood Sugar",
-  ];
-
-  const bloodSugarSubTests = ["F", "PP", "Random"];
 
   return (
     <>
@@ -387,7 +297,7 @@ export default function Test6({
           padding: "1rem",
         }}
       >
-        {kitItems?.map(kit => (
+        {kitItems?.map((kit) => (
           <div
             key={kit._id}
             style={{
@@ -409,7 +319,7 @@ export default function Test6({
               <input
                 type="checkbox"
                 checked={currentKits.some(
-                  selectedKit => selectedKit._id === kit._id
+                  (selectedKit) => selectedKit._id === kit._id
                 )}
                 onChange={() => handleCheckboxChange(kit)}
               />
@@ -417,7 +327,7 @@ export default function Test6({
                 <h2>{kit.name}</h2>
                 {kit.kit.length > 0 && (
                   <div>
-                    {kit.kit.map(item => (
+                    {kit.kit.map((item) => (
                       <p key={item}>{item}</p>
                     ))}
                   </div>
@@ -427,84 +337,62 @@ export default function Test6({
           </div>
         ))}
       </div>
-      {currentKits.length > 0 && (
+
+      {selectedOptions?.medicines?.length > 0 && (
         <div>
-          <h2>Instructions</h2>
+          <h2>Instructions for Selected Medicines</h2>
           <DoctorPrescribe
-            medicines={currentKits
-              .flatMap(kit => (kit.kit.length > 0 ? kit.kit : [kit.name]))
-              .concat(addedMedicines)}
+            medicines={selectedOptions.medicines.map(med => med.name)}
             prescriptions={prescriptions}
             setPrescriptions={setPrescriptions}
           />
-          <input
-            type="text"
-            value={newMedicine}
-            onChange={e => setNewMedicine(e.target.value)}
-            placeholder="Add new medicine"
-          />
-          <button onClick={handleAddMedicine}>Add Medicine</button>
-          <button onClick={savePrescription}>Save Prescription</button>
-        </div>
-      )}
-      <h2 className="diag1">Tests</h2>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          backgroundColor: "#90ff90",
-          padding: "1rem",
-        }}
-      >
-        {tests.map(test => (
-          <label
-            key={test}
-            style={{
-              display: "flex",
-              gap: "1rem",
-              alignItems: "baseline",
+          <button 
+            onClick={savePrescription}
+            style={{ 
+              marginTop: "1.5rem",
+              padding: "0.75rem 2rem",
+              fontSize: "1rem",
+              fontWeight: "600",
+              backgroundColor: "#4CAF50",
+              color: "white",
+              border: "none",
+              borderRadius: "8px",
               cursor: "pointer",
+              boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+              transition: "all 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px"
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.backgroundColor = "#45a049";
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.backgroundColor = "#4CAF50";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
             }}
           >
-            <input
-              type="checkbox"
-              checked={selectedTests.mainTests.includes(test)}
-              onChange={() => handleMainCheckboxChange(test)}
-            />
-            {test}
-          </label>
-        ))}
-      </div>
-      {selectedTests.mainTests.includes("Blood Sugar") && (
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            backgroundColor: "#90ff90",
-            padding: "1rem",
-          }}
-        >
-          {bloodSugarSubTests.map(subTest => (
-            <label
-              key={subTest}
-              style={{
-                display: "flex",
-                gap: "1rem",
-                alignItems: "baseline",
-                cursor: "pointer",
-              }}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
             >
-              <input
-                type="checkbox"
-                checked={
-                  selectedTests.subTests["Blood Sugar"]?.includes(subTest) ||
-                  false
-                }
-                onChange={() => handleSubCheckboxChange("Blood Sugar", subTest)}
-              />
-              {subTest}
-            </label>
-          ))}
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+              <polyline points="17 21 17 13 7 13 7 21"/>
+              <polyline points="7 3 7 8 15 8"/>
+            </svg>
+            Update Instructions
+          </button>
         </div>
       )}
     </>

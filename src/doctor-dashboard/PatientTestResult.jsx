@@ -3,6 +3,8 @@ import DoctorNavbar from "./DoctorNavbar";
 import BASE_URL from "../Config";
 import { useParams, useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const PatientTestResult = () => {
   const [data1, setData1] = useState({});
@@ -13,7 +15,7 @@ const PatientTestResult = () => {
   const navigate = useNavigate();
   const [userId, appointmentId, haiTestId] = params.id.split(",");
 
-  const handleTabChange = tab => {
+  const handleTabChange = (tab) => {
     setSelectedTab(tab);
   };
 
@@ -377,7 +379,7 @@ const PatientTestResult = () => {
                   <div className="options-container">
                     {typeof question.option === "object" ? (
                       question.option?.length > 0 ? (
-                        question?.option?.map(e => {
+                        question?.option?.map((e) => {
                           return (
                             <>
                               {typeof e == "object" ? (
@@ -427,7 +429,7 @@ const PatientTestResult = () => {
                               >
                                 {typeof subQuestion.option === "object" ? (
                                   subQuestion?.option?.length > 0 ? (
-                                    subQuestion?.option?.map(e => {
+                                    subQuestion?.option?.map((e) => {
                                       return (
                                         <>
                                           {typeof e == "object" ? (
@@ -475,7 +477,7 @@ const PatientTestResult = () => {
           ))}
         {selectedTab === "uploadedImages" && (
           <div>
-            {data1?.UploadedImage?.map(e => {
+            {data1?.UploadedImage?.map((e) => {
               return (
                 <img
                   style={{ width: "400px", cursor: "pointer" }}
@@ -488,12 +490,116 @@ const PatientTestResult = () => {
         )}
         {selectedTab === "GenerateReport" && (
           <div className="gene-report">
-            <button onClick={() => navigate(`/analysis/${params.id}`)}>
-              Generate Report
+            <button
+              onClick={() => navigate(`/analysis/${params.id}`)}
+              style={{
+                marginTop: "1.5rem",
+                padding: "0.75rem 2rem",
+                fontSize: "1rem",
+                fontWeight: "600",
+                backgroundColor: "#4CAF50",
+                color: "white",
+                border: "none",
+                borderRadius: "8px",
+                cursor: "pointer",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                transition: "all 0.3s ease",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "8px",
+                letterSpacing: "1px",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.backgroundColor = "#45a049";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.backgroundColor = "#4CAF50";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                <polyline points="14 2 14 8 20 8" />
+                <line x1="12" y1="18" x2="12" y2="12" />
+                <line x1="9" y1="15" x2="15" y2="15" />
+              </svg>
+              GENERATE REPORT
             </button>
           </div>
         )}
+        <button
+          onClick={() => nextStep()}
+          style={{
+            padding: "0.75rem 2rem",
+            fontSize: "1rem",
+            fontWeight: "600",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+            transition: "all 0.3s ease",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            letterSpacing: "0.5px",
+            margin: "1rem 0",
+          }}
+          onMouseOver={(e) => {
+            e.currentTarget.style.backgroundColor = "#45a049";
+            e.currentTarget.style.transform = "translateY(-2px)";
+            e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+          }}
+          onMouseOut={(e) => {
+            e.currentTarget.style.backgroundColor = "#4CAF50";
+            e.currentTarget.style.transform = "translateY(0)";
+            e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M20 6L9 17l-5-5" />
+          </svg>
+          Assessment Save, and Continue
+        </button>
       </div>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };

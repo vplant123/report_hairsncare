@@ -51,6 +51,22 @@ const PrescriptionUser = ({ data }) => {
   const handleAddToCart = async () => {
     try {
       setLoader(true);
+      toast.info("Adding items to cart...", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+
+      // Create cart items from the medicines
+      const cartItemsToAdd = data.test6?.medicines?.map(medicine => ({
+        productId: medicine._id,
+        quantity: parseInt(medicine.quantity) || 1
+      })) || [];
+
       const response = await fetch(
         `${BASE_URL}/cart/update-cart?userId=${userId}`,
         {
@@ -59,20 +75,50 @@ const PrescriptionUser = ({ data }) => {
             Authorization: storedUserData.logedInUser.accessToken,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(cartItems),
+          body: JSON.stringify(cartItemsToAdd),
         }
       );
+      
+      const result = await response.json();
       setLoader(false);
+      
       if (response.ok) {
-        const result = await response.json();
         console.log("Cart updated successfully:", result);
+        toast.success("🛒 Items added to cart successfully!", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          style: {
+            backgroundColor: "#4CAF50",
+            color: "white",
+            fontWeight: "bold",
+          },
+        });
         navigate("/create-order");
       } else {
-        console.error("Failed to update cart:", response.statusText);
+        throw new Error(result.message || "Failed to update cart");
       }
     } catch (error) {
       setLoader(false);
       console.error("Error:", error);
+      toast.error(`❌ ${error.message || "Error updating cart"}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#f44336",
+          color: "white",
+          fontWeight: "bold",
+        },
+      });
     }
   };
 
@@ -94,20 +140,60 @@ const PrescriptionUser = ({ data }) => {
   console.log("koejgt", medData);
 
   const generatePDF = () => {
-    setLoading(true);
+    try {
+      setLoading(true);
+      toast.info("Generating PDF...", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
 
-    const element = contentRef.current;
-    const opt = {
-      margin: 0.5,
-      filename: `Prescription.pdf`,
-      image: { type: "jpeg", quality: 0.7 },
-      html2canvas: { scale: 1.5, useCORS: true },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
+      const element = contentRef.current;
+      const opt = {
+        margin: 0.5,
+        filename: `Prescription.pdf`,
+        image: { type: "jpeg", quality: 0.7 },
+        html2canvas: { scale: 1.5, useCORS: true },
+        jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+      };
 
-    html2pdf().from(element).set(opt).save();
-    setLoading(false);
-    toast.success("PDF generated successfully");
+      html2pdf().from(element).set(opt).save();
+      setLoading(false);
+      toast.success("📄 PDF generated successfully!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#4CAF50",
+          color: "white",
+          fontWeight: "bold",
+        },
+      });
+    } catch (error) {
+      setLoading(false);
+      toast.error("❌ Failed to generate PDF", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#f44336",
+          color: "white",
+          fontWeight: "bold",
+        },
+      });
+    }
   };
 
   let p = 7;
@@ -247,53 +333,48 @@ const PrescriptionUser = ({ data }) => {
                   Prescription
                 </div>
                 <div>
-                  <div>
-                    {Object.keys(prescriptionM || {}).map((it, ind) => {
-                      return (
+                  {data.test6?.medicines?.map((medicine, index) => (
+                    <div
+                      key={medicine.name}
+                      className={`d-flex flex-column ${
+                        index + 1 === p ||
+                        index + 1 === 10 + p ||
+                        index + 1 === 20 + p
+                          ? "page-break-1"
+                          : ""
+                      }`}
+                    >
+                      <div
+                        className="d-flex"
+                        style={{ fontSize: "16px", fontWeight: "600" }}
+                      >
+                        <div>{index + 1}.</div>
                         <div
-                          className={`d-flex flex-column ${
-                            ind + 1 == p ||
-                            ind + 1 == 10 + p ||
-                            ind + 1 == 20 + p
-                              ? "page-break-1"
-                              : ""
-                          }`}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            margin: "0 0 0 7px",
+                          }}
                         >
-                          <div
-                            className="d-flex"
-                            style={{ fontSize: "16px", fontWeight: "600" }}
-                          >
-                            <div>{ind + 1}.</div>
-                            <div
-                              style={{
-                                display: "flex",
-                                justifyContent: "center",
-                                alignItems: "center",
-                                margin: "0 0 0 7px",
-                              }}
-                            >
-                              {it} X {prescriptionM[it].quantity}
-                            </div>
-                          </div>
-                          <div
-                            style={{
-                              margin: "0 0 6px 25px",
-                              ontSize: "13px",
-                              fontWeight: "600",
-                            }}
-                          >{`${prescriptionM[it].dosage} ${
-                            prescriptionM[it].route
-                          } ${prescriptionM[it].frequency}  ${
-                            prescriptionM[it].route === "Oral"
-                              ? prescriptionM[it].when
-                              : ""
-                          } ${prescriptionM[it].duration} ${
-                            prescriptionM[it].instructions
-                          }`}</div>
+                          {medicine.name} X {medicine.quantity}
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                      <div
+                        style={{
+                          margin: "0 0 6px 25px",
+                          fontSize: "13px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        {`${medicine.dosage || ""} ${medicine.route || "Oral"} ${
+                          medicine.frequency || "Daily"
+                        } ${
+                          medicine.route === "Oral" ? medicine.when || "" : ""
+                        } ${medicine.duration || ""} ${medicine.instructions || ""}`}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
               <div
@@ -354,7 +435,18 @@ const PrescriptionUser = ({ data }) => {
           {loading ? "Please wait" : "Buy"}
         </button>
       </div>
-      <ToastContainer position="bottom-right" />
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+      />
     </div>
   );
 };
