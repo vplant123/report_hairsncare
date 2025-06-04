@@ -62,10 +62,11 @@ const PrescriptionUser = ({ data }) => {
       });
 
       // Create cart items from the medicines
-      const cartItemsToAdd = data.test6?.medicines?.map(medicine => ({
-        productId: medicine._id,
-        quantity: parseInt(medicine.quantity) || 1
-      })) || [];
+      const cartItemsToAdd =
+        data.test6?.medicines?.map(medicine => ({
+          productId: medicine._id,
+          quantity: parseInt(medicine.quantity) || 1,
+        })) || [];
 
       const response = await fetch(
         `${BASE_URL}/cart/update-cart?userId=${userId}`,
@@ -78,10 +79,10 @@ const PrescriptionUser = ({ data }) => {
           body: JSON.stringify(cartItemsToAdd),
         }
       );
-      
+
       const result = await response.json();
       setLoader(false);
-      
+
       if (response.ok) {
         console.log("Cart updated successfully:", result);
         toast.success("🛒 Items added to cart successfully!", {
@@ -367,11 +368,13 @@ const PrescriptionUser = ({ data }) => {
                           fontWeight: "600",
                         }}
                       >
-                        {`${medicine.dosage || ""} ${medicine.route || "Oral"} ${
-                          medicine.frequency || "Daily"
-                        } ${
+                        {`${medicine.dosage || ""} ${
+                          medicine.route || "Oral"
+                        } ${medicine.frequency || "Daily"} ${
                           medicine.route === "Oral" ? medicine.when || "" : ""
-                        } ${medicine.duration || ""} ${medicine.instructions || ""}`}
+                        } ${medicine.duration || ""} ${
+                          medicine.instructions || ""
+                        }`}
                       </div>
                     </div>
                   ))}

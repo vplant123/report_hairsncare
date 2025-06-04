@@ -214,7 +214,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
   useEffect(() => {
     if (selectedOptions?.medicines?.length > 0) {
       const initialPrescriptions = {};
-      selectedOptions.medicines.forEach((medicine) => {
+      selectedOptions.medicines.forEach(medicine => {
         initialPrescriptions[medicine.name] = {
           route: medicine.route || "Oral",
           subCategory: medicine.subCategory || "Tablets",
@@ -239,9 +239,9 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
 
         // Pre-select medicines from selectedOptions
         if (selectedOptions?.medicines?.length > 0) {
-          const preSelectedKits = data.message.filter((kit) =>
+          const preSelectedKits = data.message.filter(kit =>
             selectedOptions.medicines.some(
-              (medicine) =>
+              medicine =>
                 medicine.name === kit.name || kit.kit.includes(medicine.name)
             )
           );
@@ -255,23 +255,23 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
     fetchProducts();
   }, [selectedOptions]);
 
-  const handleCheckboxChange = (kit) => {
-    setCurrentKits((prev) =>
-      prev.some((selectedKit) => selectedKit._id === kit._id)
-        ? prev.filter((selectedKit) => selectedKit._id !== kit._id)
+  const handleCheckboxChange = kit => {
+    setCurrentKits(prev =>
+      prev.some(selectedKit => selectedKit._id === kit._id)
+        ? prev.filter(selectedKit => selectedKit._id !== kit._id)
         : [...prev, kit]
     );
   };
 
   const savePrescription = () => {
     // Only update the medicines that are in selectedOptions
-    const formattedMedicines = selectedOptions.medicines.map((medicine) => ({
+    const formattedMedicines = selectedOptions.medicines.map(medicine => ({
       ...medicine,
       ...prescriptions[medicine.name],
     }));
 
     if (setSelectedOptions) {
-      setSelectedOptions((prev) => ({
+      setSelectedOptions(prev => ({
         ...prev,
         medicines: formattedMedicines,
       }));
@@ -281,7 +281,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
 
   const handleAddMedicine = () => {
     if (newMedicine.trim()) {
-      setAddedMedicines((prev) => [...prev, newMedicine.trim()]);
+      setAddedMedicines(prev => [...prev, newMedicine.trim()]);
       setNewMedicine("");
     }
   };
@@ -297,7 +297,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
           padding: "1rem",
         }}
       >
-        {kitItems?.map((kit) => (
+        {kitItems?.map(kit => (
           <div
             key={kit._id}
             style={{
@@ -319,7 +319,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               <input
                 type="checkbox"
                 checked={currentKits.some(
-                  (selectedKit) => selectedKit._id === kit._id
+                  selectedKit => selectedKit._id === kit._id
                 )}
                 onChange={() => handleCheckboxChange(kit)}
               />
@@ -327,7 +327,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
                 <h2>{kit.name}</h2>
                 {kit.kit.length > 0 && (
                   <div>
-                    {kit.kit.map((item) => (
+                    {kit.kit.map(item => (
                       <p key={item}>{item}</p>
                     ))}
                   </div>
@@ -346,9 +346,9 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
             prescriptions={prescriptions}
             setPrescriptions={setPrescriptions}
           />
-          <button 
+          <button
             onClick={savePrescription}
-            style={{ 
+            style={{
               marginTop: "1.5rem",
               padding: "0.75rem 2rem",
               fontSize: "1rem",
@@ -363,33 +363,33 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "8px"
+              gap: "8px",
             }}
-            onMouseOver={(e) => {
+            onMouseOver={e => {
               e.currentTarget.style.backgroundColor = "#45a049";
               e.currentTarget.style.transform = "translateY(-2px)";
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
             }}
-            onMouseOut={(e) => {
+            onMouseOut={e => {
               e.currentTarget.style.backgroundColor = "#4CAF50";
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
             }}
           >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="20" 
-              height="20" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
               strokeLinejoin="round"
             >
-              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
-              <polyline points="17 21 17 13 7 13 7 21"/>
-              <polyline points="7 3 7 8 15 8"/>
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
             </svg>
             Update Instructions
           </button>

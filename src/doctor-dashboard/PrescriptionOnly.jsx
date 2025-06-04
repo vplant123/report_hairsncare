@@ -37,22 +37,26 @@ const PrescriptionOnly = () => {
         `${BASE_URL}/doctor/get-ordered-medicines?userId=${userId}&orderId=${orderId}`,
         {
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
             // Add any auth headers if required
           },
         }
       );
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("API Error Response:", errorText);
-        
+
         if (response.status === 404) {
-          throw new Error("Prescription data not found. Please check if the order ID is correct.");
+          throw new Error(
+            "Prescription data not found. Please check if the order ID is correct."
+          );
         }
-        throw new Error(`Server error: ${response.status}. Please try again later.`);
+        throw new Error(
+          `Server error: ${response.status}. Please try again later.`
+        );
       }
-      
+
       const data = await response.json();
       console.log("Raw API response:", data);
 
@@ -67,7 +71,7 @@ const PrescriptionOnly = () => {
 
       // Extract medicines from the products array
       if (orderData?.products && orderData.products.length > 0) {
-        const medicinesList = orderData.products.map((product) => ({
+        const medicinesList = orderData.products.map(product => ({
           name: product.item.name,
           quantity: product.quantity.toString(),
           route: product.item.category || "Oral",
@@ -83,11 +87,11 @@ const PrescriptionOnly = () => {
 
         console.log("Processed medicines list:", medicinesList);
 
-        setSelectedOptions4((prev) => ({
+        setSelectedOptions4(prev => ({
           ...prev,
           medicines: medicinesList,
         }));
-        
+
         toast.success("✅ Prescription data loaded successfully!", {
           position: "bottom-right",
           autoClose: 3000,
@@ -140,7 +144,7 @@ const PrescriptionOnly = () => {
 
       // Create the test6 object with medicines array and individual medicine details
       const test6Data = {
-        medicines: selectedOptions4?.medicines.map((medicine) => ({
+        medicines: selectedOptions4?.medicines.map(medicine => ({
           kit: medicine.name,
           route: medicine.route || "Oral",
           subCategory: medicine.subCategory || "Tablets",
@@ -151,8 +155,8 @@ const PrescriptionOnly = () => {
           duration: medicine.duration || "1 month",
           instructions: medicine.instructions || "",
           price: medicine.price,
-          description: medicine.description
-        }))
+          description: medicine.description,
+        })),
       };
 
       const prescriptionData = {
@@ -165,7 +169,10 @@ const PrescriptionOnly = () => {
           age: data1?.personal?.["Select your age group"] || "",
           phone: data1?.personal?.phoneNumber || "",
           email: data1?.personal?.email || "",
-          sex: data1?.personal?.Gender?.src === "/assets/img/question/female.svg" ? "Female" : "Male",
+          sex:
+            data1?.personal?.Gender?.src === "/assets/img/question/female.svg"
+              ? "Female"
+              : "Male",
         },
         test6: test6Data,
         dianosis: data1?.dianosis || [],
@@ -194,7 +201,9 @@ const PrescriptionOnly = () => {
       const responseData = await response.json();
 
       if (!response.ok) {
-        throw new Error(responseData.message || "Failed to submit prescription");
+        throw new Error(
+          responseData.message || "Failed to submit prescription"
+        );
       }
 
       console.log("Prescription submission response:", responseData);
@@ -212,7 +221,7 @@ const PrescriptionOnly = () => {
           fontWeight: "bold",
         },
       });
-      
+
       // Optionally navigate after successful submission
       // navigate("/appointment");
     } catch (error) {
@@ -261,10 +270,22 @@ const PrescriptionOnly = () => {
             preview: "preview",
             personal: {
               name: data1?.personal?.name,
-              age: data1?.personal ? data1?.personal["Select your age group"] : "",
+              age: data1?.personal
+                ? data1?.personal["Select your age group"]
+                : "",
               phone: data1?.personal?.phoneNumber,
               email: data1?.personal?.email,
-              sex: data1?.personal?.Gender?.src === "/assets/img/question/female.svg" ? "Female" : "Male",
+              sex:
+                data1?.personal?.Gender?.src ===
+                "/assets/img/question/female.svg"
+                  ? "Female"
+                  : "Male",
+            },
+            bloodTest: {
+              mainTests: [],
+              subTests: {
+                "Blood Sugar": [],
+              },
             },
             bloodTest: {
               mainTests: [],
@@ -273,8 +294,8 @@ const PrescriptionOnly = () => {
               },
             },
             test6: {
-              medicines: selectedOptions4?.medicines || []
-            }
+              medicines: selectedOptions4?.medicines || [],
+            },
           }}
         />
       )}
