@@ -22,10 +22,9 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import PrescriptionUser from "./PrescriptionUser.jsx";
 
-
 // import { textAlign } from "html2canvas/dist/types/css/property-descriptors/text-align";
 
-const Analysis = () => {
+const AnalysisCopy = () => {
   const [data1, setData1] = useState({});
   const [selectedOptions, setSelectedOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -507,4 +506,4 @@ const Analysis = () => {
   );
 };
 
-export default Analysis;
+export default AnalysisCopy;

@@ -4,7 +4,7 @@ import BASE_URL from "../Config";
 import { useParams, useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
-const PatientTestResult = () => {
+const FollowUp = () => {
   const [data1, setData1] = useState({});
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -112,7 +112,7 @@ const PatientTestResult = () => {
               selectedTab === "GenerateReport" ? "selected1" : ""
             }`}
           >
-            GENERATE REPORT
+            VIEW REPORT
           </div>
         </div>
       </div>
@@ -488,8 +488,12 @@ const PatientTestResult = () => {
         )}
         {selectedTab === "GenerateReport" && (
           <div className="gene-report">
-            <button onClick={() => navigate(`/analysis/${params.id}`)}>
-              Generate Report
+            <button
+              onClick={() =>
+                navigate(`/Followup/doctor-analyse-report/${params.id}`)
+              }
+            >
+              View Report
             </button>
           </div>
         )}
@@ -498,4 +502,4 @@ const PatientTestResult = () => {
   );
 };
 
-export default PatientTestResult;
+export default FollowUp;

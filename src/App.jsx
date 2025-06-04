@@ -9,8 +9,11 @@ import ManagementReport from "./Reports/managementReport/index.jsx";
 import "./App.css";
 // import "./doctor-dashboard/A"
 import PatientTestResult from "./doctor-dashboard/PatientTestResult.jsx";
+import PatientTestFollowUp from "./doctor-dashboard/PatientTestFollowUp.jsx";
 import Analysis from "./doctor-dashboard/Analysis.jsx";
 import PrescriptionOnly from "./doctor-dashboard/PrescriptionOnly.jsx";
+import AnalysisCopy from "./doctor-dashboard/AnalysisCopy.jsx";
+import FollowUpDoctorAnalysis from "./Reports/DoctorAnalysis/indexs.jsx";
 // import DoctorNavbar from "./doctor-dashboard/DoctorNavbar.jsx";
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -28,12 +31,23 @@ function App() {
             path="/doctor-analyse-report/:id"
             element={<DoctorAnalysis />}
           />
+          <Route
+            path="/Followup/doctor-analyse-report/:id"
+            element={<FollowUpDoctorAnalysis />}
+          />
+
           <Route path="/management-report/:id" element={<ManagementReport />} />
           <Route
             path="/patient-test-result/:id"
             element={<PatientTestResult />}
           />
+          <Route
+            path="/followup/patient-test-result/:id"
+            element={<PatientTestFollowUp />}
+          />
           <Route path="/analysis/:id" element={<Analysis />} />
+
+          {/* <Route path="/followup/analysis/:id" element={<AnalysisCopy />} /> */}
 
           <Route path="/Prescription-Only/:id" element={<PrescriptionOnly />} />
         </Routes>
