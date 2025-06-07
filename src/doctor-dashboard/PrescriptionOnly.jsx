@@ -71,7 +71,7 @@ const PrescriptionOnly = () => {
 
       // Extract medicines from the products array
       if (orderData?.products && orderData.products.length > 0) {
-        const medicinesList = orderData.products.map(product => ({
+        const medicinesList = orderData.products.map((product) => ({
           name: product.item.name,
           quantity: product.quantity.toString(),
           route: product.item.category || "Oral",
@@ -87,7 +87,7 @@ const PrescriptionOnly = () => {
 
         console.log("Processed medicines list:", medicinesList);
 
-        setSelectedOptions4(prev => ({
+        setSelectedOptions4((prev) => ({
           ...prev,
           medicines: medicinesList,
         }));
@@ -144,7 +144,7 @@ const PrescriptionOnly = () => {
 
       // Create the test6 object with medicines array and individual medicine details
       const test6Data = {
-        medicines: selectedOptions4?.medicines.map(medicine => ({
+        medicines: selectedOptions4?.medicines.map((medicine) => ({
           kit: medicine.name,
           route: medicine.route || "Oral",
           subCategory: medicine.subCategory || "Tablets",
@@ -163,16 +163,12 @@ const PrescriptionOnly = () => {
         userId,
         appointmentId,
         orderId,
-        status: "completed", // Adding status field
+        status: "completed",
         personal: {
-          name: data1?.personal?.name || "",
-          age: data1?.personal?.["Select your age group"] || "",
-          phone: data1?.personal?.phoneNumber || "",
-          email: data1?.personal?.email || "",
-          sex:
-            data1?.personal?.Gender?.src === "/assets/img/question/female.svg"
-              ? "Female"
-              : "Male",
+          name: data1?.userId?.fullname || "",
+          phone: data1?.userId?.mobile || "",
+          email: data1?.userId?.email || "",
+          addressId: data1?.addressId || "",
         },
         test6: test6Data,
         dianosis: data1?.dianosis || [],
@@ -221,9 +217,6 @@ const PrescriptionOnly = () => {
           fontWeight: "bold",
         },
       });
-
-      // Optionally navigate after successful submission
-      // navigate("/appointment");
     } catch (error) {
       console.error("Error submitting prescription:", error);
       toast.error(`❌ ${error.message || "Failed to submit prescription"}`, {
@@ -269,23 +262,10 @@ const PrescriptionOnly = () => {
           data={{
             preview: "preview",
             personal: {
-              name: data1?.personal?.name,
-              age: data1?.personal
-                ? data1?.personal["Select your age group"]
-                : "",
-              phone: data1?.personal?.phoneNumber,
-              email: data1?.personal?.email,
-              sex:
-                data1?.personal?.Gender?.src ===
-                "/assets/img/question/female.svg"
-                  ? "Female"
-                  : "Male",
-            },
-            bloodTest: {
-              mainTests: [],
-              subTests: {
-                "Blood Sugar": [],
-              },
+              name: data1?.userId?.fullname || "",
+              phone: data1?.userId?.mobile || "",
+              email: data1?.userId?.email || "", // You might want to add this to your user data if needed
+              addressId: data1?.addressId || "",
             },
             bloodTest: {
               mainTests: [],

@@ -63,7 +63,7 @@ const PrescriptionUser = ({ data }) => {
 
       // Create cart items from the medicines
       const cartItemsToAdd =
-        data.test6?.medicines?.map(medicine => ({
+        data.test6?.medicines?.map((medicine) => ({
           productId: medicine._id,
           quantity: parseInt(medicine.quantity) || 1,
         })) || [];
@@ -258,7 +258,7 @@ const PrescriptionUser = ({ data }) => {
                 style={{ margin: "2px 0 0 9px", fontSize: "15px", gap: "10px" }}
               >
                 <div>{data.personal?.name}</div>
-                <div>{data.personal?.sex}</div>
+                {/* <div>{data.personal?.sex}</div> */}
               </div>
             </div>
             <div className="d-flex">
