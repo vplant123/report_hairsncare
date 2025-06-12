@@ -4,7 +4,7 @@ import BASE_URL from "../Config";
 import { useParams, useNavigate } from "react-router-dom";
 import "./AdminDashboard.css";
 
-const FollowUp = () => {
+const PatientTestFollowUp = () => {
   const [data1, setData1] = useState({});
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
@@ -502,4 +502,4 @@ const FollowUp = () => {
   );
 };
 
-export default FollowUp;
+export default PatientTestFollowUp;

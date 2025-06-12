@@ -35,6 +35,10 @@ function App() {
             path="/Followup/doctor-analyse-report/:id"
             element={<FollowUpDoctorAnalysis />}
           />
+          <Route
+            path="/Followup/create-prescription/:id"
+            element={<AnalysisCopy />}
+          />
 
           <Route path="/management-report/:id" element={<ManagementReport />} />
           <Route

@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Page1 from "./Components/Page1.jsx";
-
 import "./index.css";
 import html2pdf from "html2pdf.js";
 import { toast, ToastContainer } from "react-toastify";
 import Page2 from "./Components/page2.jsx";
 import Page3 from "./Components/page3.jsx";
 import { useMediaQuery } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import BASE_URL from "../../Config";
 
 export default function FollowUpDoctorAnalysis(props) {
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (props?.setTitle) props?.setTitle(window.location.pathname);
@@ -161,6 +161,45 @@ export default function FollowUpDoctorAnalysis(props) {
       >
         <i className="fa fa-angle-up"></i>
       </a>
+
+      <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+        <button
+          className="generate-prescription-btn"
+          onClick={() =>
+            navigate(
+              `/Followup/create-prescription/${userId},${appointmentId},${haiTestId}`
+            )
+          }
+          style={{
+            padding: "12px 24px",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            fontSize: "16px",
+            fontWeight: "500",
+            cursor: "pointer",
+            transition: "all 0.3s ease",
+            boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+            margin: "20px 0",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onMouseOver={(e) => {
+            e.target.style.backgroundColor = "#45a049";
+            e.target.style.transform = "translateY(-2px)";
+            e.target.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
+          }}
+          onMouseOut={(e) => {
+            e.target.style.backgroundColor = "#4CAF50";
+            e.target.style.transform = "translateY(0)";
+            e.target.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+          }}
+        >
+          Generate Prescription
+        </button>
+      </div>
     </div>
   );
 }

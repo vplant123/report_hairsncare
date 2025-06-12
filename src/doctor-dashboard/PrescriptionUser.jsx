@@ -18,10 +18,34 @@ const PrescriptionUser = ({ data }) => {
   const userId = storedUserData?.logedInUser?.user._id;
   const [prescriptionM, setPrescriptionM] = useState({});
 
+  // Standardize medicine data format
+  const getStandardizedMedicines = () => {
+    if (!data?.test6?.medicines) return [];
+    
+    // Handle both data formats
+    const medicines = Array.isArray(data.test6.medicines) 
+      ? data.test6.medicines 
+      : [data.test6.medicines];
+
+    return medicines.map(medicine => ({
+      name: medicine.name || medicine.kit || '',
+      quantity: medicine.quantity || '1',
+      route: medicine.route || 'Oral',
+      subCategory: medicine.subCategory || 'Tablets',
+      dosage: medicine.dosage || '',
+      frequency: medicine.frequency || 'Daily at night',
+      when: medicine.when || 'Before food',
+      duration: medicine.duration || '1 month',
+      instructions: medicine.instructions || '',
+      price: medicine.price || '',
+      description: medicine.description || ''
+    }));
+  };
+
   useEffect(() => {
-    console.log("koejgt", data.test6?.medicines?.[0]?.medicines);
-    setPrescriptionM(data.test6?.medicines?.[0]?.medicines);
-  }, [data.test6?.medicines?.[0]?.medicines]);
+    const standardizedMedicines = getStandardizedMedicines();
+    setPrescriptionM(standardizedMedicines);
+  }, [data]);
 
   // Fetch cart items directly
   useEffect(() => {
@@ -61,12 +85,11 @@ const PrescriptionUser = ({ data }) => {
         progress: undefined,
       });
 
-      // Create cart items from the medicines
-      const cartItemsToAdd =
-        data.test6?.medicines?.map((medicine) => ({
-          productId: medicine._id,
-          quantity: parseInt(medicine.quantity) || 1,
-        })) || [];
+      // Create cart items from the standardized medicines
+      const cartItemsToAdd = getStandardizedMedicines().map((medicine) => ({
+        productId: medicine._id,
+        quantity: parseInt(medicine.quantity) || 1,
+      }));
 
       const response = await fetch(
         `${BASE_URL}/cart/update-cart?userId=${userId}`,
@@ -137,9 +160,6 @@ const PrescriptionUser = ({ data }) => {
     return date.toLocaleString("en-GB", options).replace(",", "");
   };
 
-  let medData = data.test6?.medicines?.[0]?.medicines || {};
-  console.log("koejgt", medData);
-
   const generatePDF = () => {
     try {
       setLoading(true);
@@ -198,6 +218,7 @@ const PrescriptionUser = ({ data }) => {
   };
 
   let p = 7;
+  const standardizedMedicines = getStandardizedMedicines();
 
   return (
     <div>
@@ -334,7 +355,7 @@ const PrescriptionUser = ({ data }) => {
                   Prescription
                 </div>
                 <div>
-                  {data.test6?.medicines?.map((medicine, index) => (
+                  {standardizedMedicines.map((medicine, index) => (
                     <div
                       key={medicine.name}
                       className={`d-flex flex-column ${
