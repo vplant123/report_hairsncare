@@ -273,66 +273,14 @@ export default function Test6({
   };
 
   const savePrescription = () => {
-    const medicinesData = currentKits.map(kit => {
-      const kitMedicines = {};
-      
-      // Add the kit's own medicine if it's not in a kit array
-      if (!kit.kit.length) {
-        kitMedicines[kit.name] = {
-          route: prescriptions[kit.name]?.route || "Oral",
-          subCategory: prescriptions[kit.name]?.subCategory || "Tablets",
-          quantity: prescriptions[kit.name]?.quantity || "1",
-          dosage: prescriptions[kit.name]?.dosage || "",
-          frequency: prescriptions[kit.name]?.frequency || "Daily at night",
-          when: prescriptions[kit.name]?.when || "Before food",
-          duration: prescriptions[kit.name]?.duration || "1 month",
-          instructions: prescriptions[kit.name]?.instructions || ""
-        };
-      }
-
-      // Add medicines from the kit array
-      kit.kit.forEach(medicineName => {
-        kitMedicines[medicineName] = {
-          route: prescriptions[medicineName]?.route || "Oral",
-          subCategory: prescriptions[medicineName]?.subCategory || "Tablets",
-          quantity: prescriptions[medicineName]?.quantity || "1",
-          dosage: prescriptions[medicineName]?.dosage || "",
-          frequency: prescriptions[medicineName]?.frequency || "Daily at night",
-          when: prescriptions[medicineName]?.when || "Before food",
-          duration: prescriptions[medicineName]?.duration || "1 month",
-          instructions: prescriptions[medicineName]?.instructions || ""
-        };
-      });
-
-      return {
-        kit: kit.name,
-        medicines: kitMedicines
-      };
-    });
-
-    // Add any manually added medicines
-    addedMedicines.forEach(medicineName => {
-      medicinesData.push({
-        kit: medicineName,
-        medicines: {
-          [medicineName]: {
-            route: prescriptions[medicineName]?.route || "Oral",
-            subCategory: prescriptions[medicineName]?.subCategory || "Tablets",
-            quantity: prescriptions[medicineName]?.quantity || "1",
-            dosage: prescriptions[medicineName]?.dosage || "",
-            frequency: prescriptions[medicineName]?.frequency || "Daily at night",
-            when: prescriptions[medicineName]?.when || "Before food",
-            duration: prescriptions[medicineName]?.duration || "1 month",
-            instructions: prescriptions[medicineName]?.instructions || ""
-          }
-        }
-      });
-    });
-
-    setSelectedOptions(prev => ({
+    console.log("jjewoj", currentKits);
+    setSelectedOptions((prev) => ({
       ...prev,
-      medicines: medicinesData,
-      followUpDate: followUpDate
+      medicines: currentKits.map((kit) => ({
+        kit: kit.name,
+        medicines: prescriptions,
+      })),
+      followUpDate: followUpDate,
     }));
 
     toast.success("Medicine instructions updated in prescription");
@@ -468,7 +416,7 @@ export default function Test6({
               value={followUpDate}
               onChange={(e) => setFollowUpDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
-              style={{ padding: "0.5rem" }}
+              style={{ padding: "0.5rem", fontSize: "1rem" }}
             />
           </div>
           <input

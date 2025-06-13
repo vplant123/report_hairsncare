@@ -211,6 +211,7 @@ const Analysis = () => {
             medicines: selectedOptions4?.medicines
               ? Object.keys(selectedOptions4?.medicines[0])
               : "",
+            followUpDate: selectedOptions4?.followUpDate || null
           }),
         }
       );
