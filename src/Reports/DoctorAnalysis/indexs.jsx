@@ -38,22 +38,22 @@ export default function FollowUpDoctorAnalysis(props) {
 
   const [userId, appointmentId, haiTestId] = params.id.split(",");
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          `${BASE_URL}/doctor/getPrescription?appointmentId=${appointmentId}`
-        );
-        if (!response.ok) {
-          throw new Error(`Error: ${response.status}`);
-        }
-        const result = await response.json();
-        setData(result.data);
-      } catch (error) {
-        console.error(error);
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/doctor/getPrescription?appointmentId=${appointmentId}`
+      );
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
       }
-    };
+      const result = await response.json();
+      setData(result.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, []);
   console.log("all data", data);

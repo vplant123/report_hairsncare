@@ -22,24 +22,46 @@ const PrescriptionUser = ({ data }) => {
   const getStandardizedMedicines = () => {
     if (!data?.test6?.medicines) return [];
     
-    // Handle both data formats
-    const medicines = Array.isArray(data.test6.medicines) 
-      ? data.test6.medicines 
-      : [data.test6.medicines];
-
-    return medicines.map(medicine => ({
-      name: medicine.name || medicine.kit || '',
-      quantity: medicine.quantity || '1',
-      route: medicine.route || 'Oral',
-      subCategory: medicine.subCategory || 'Tablets',
-      dosage: medicine.dosage || '',
-      frequency: medicine.frequency || 'Daily at night',
-      when: medicine.when || 'Before food',
-      duration: medicine.duration || '1 month',
-      instructions: medicine.instructions || '',
-      price: medicine.price || '',
-      description: medicine.description || ''
-    }));
+    return data.test6.medicines.flatMap(medicine => {
+      // If medicine has a kit and medicines object
+      if (medicine.kit && medicine.medicines) {
+        return Object.entries(medicine.medicines).map(([name, details]) => {
+          // Skip if details is null or undefined
+          if (!details) return null;
+          
+          return {
+            name,
+            kit: medicine.kit,
+            route: details.route || 'Oral',
+            subCategory: details.subCategory || 'Tablets',
+            quantity: details.quantity || '1',
+            dosage: details.dosage || '',
+            frequency: details.frequency || 'Daily at night',
+            when: details.when || 'Before food',
+            duration: details.duration || '1 month',
+            instructions: details.instructions || ''
+          };
+        }).filter(Boolean); // Remove any null entries
+      }
+      
+      // If medicine is a direct object with name and other properties
+      if (medicine.name) {
+        return [{
+          name: medicine.name,
+          kit: medicine.name,
+          route: medicine.route || 'Oral',
+          subCategory: medicine.subCategory || 'Tablets',
+          quantity: medicine.quantity || '1',
+          dosage: medicine.dosage || '',
+          frequency: medicine.frequency || 'Daily at night',
+          when: medicine.when || 'Before food',
+          duration: medicine.duration || '1 month',
+          instructions: medicine.instructions || ''
+        }];
+      }
+      
+      return []; // Return empty array for invalid entries
+    });
   };
 
   useEffect(() => {
@@ -83,6 +105,7 @@ const PrescriptionUser = ({ data }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        onClose: () => setLoader(false)
       });
 
       // Create cart items from the standardized medicines
@@ -106,30 +129,27 @@ const PrescriptionUser = ({ data }) => {
       const result = await response.json();
       setLoader(false);
 
-      if (response.ok) {
-        console.log("Cart updated successfully:", result);
-        toast.success("🛒 Items added to cart successfully!", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          style: {
-            backgroundColor: "#4CAF50",
-            color: "white",
-            fontWeight: "bold",
-          },
-        });
-        navigate("/create-order");
-      } else {
-        throw new Error(result.message || "Failed to update cart");
+      if (!response.ok) {
+        throw new Error(result.message || "Failed to add items to cart");
       }
+
+      toast.success("✅ Items added to cart successfully!", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          backgroundColor: "#4CAF50",
+          color: "white",
+          fontWeight: "bold",
+        },
+      });
     } catch (error) {
       setLoader(false);
-      console.error("Error:", error);
-      toast.error(`❌ ${error.message || "Error updating cart"}`, {
+      toast.error(`❌ ${error.message || "Failed to add items to cart"}`, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -160,7 +180,7 @@ const PrescriptionUser = ({ data }) => {
     return date.toLocaleString("en-GB", options).replace(",", "");
   };
 
-  const generatePDF = () => {
+  const handleDownloadPDF = async () => {
     try {
       setLoading(true);
       toast.info("Generating PDF...", {
@@ -171,6 +191,7 @@ const PrescriptionUser = ({ data }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
+        onClose: () => setLoading(false)
       });
 
       const element = contentRef.current;
@@ -182,8 +203,9 @@ const PrescriptionUser = ({ data }) => {
         jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
       };
 
-      html2pdf().from(element).set(opt).save();
+      await html2pdf().from(element).set(opt).save();
       setLoading(false);
+      
       toast.success("📄 PDF generated successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -224,7 +246,7 @@ const PrescriptionUser = ({ data }) => {
     <div>
       <div style={{ justifyContent: "center" }} className="d-flex">
         {!data?.preview && (
-          <button className="pdf" onClick={generatePDF}>
+          <button className="pdf" onClick={handleDownloadPDF}>
             {loading
               ? "Please wait, download will start"
               : "Generate and Download PDF"}
@@ -389,13 +411,7 @@ const PrescriptionUser = ({ data }) => {
                           fontWeight: "600",
                         }}
                       >
-                        {`${medicine.dosage || ""} ${
-                          medicine.route || "Oral"
-                        } ${medicine.frequency || "Daily"} ${
-                          medicine.route === "Oral" ? medicine.when || "" : ""
-                        } ${medicine.duration || ""} ${
-                          medicine.instructions || ""
-                        }`}
+                        {`${medicine.dosage || ""} ${medicine.route || "Oral"} ${medicine.subCategory || "Tablets"} ${medicine.frequency || "Daily"} ${medicine.when || ""} ${medicine.duration || ""} ${medicine.instructions || ""}`}
                       </div>
                     </div>
                   ))}
@@ -470,6 +486,7 @@ const PrescriptionUser = ({ data }) => {
         draggable
         pauseOnHover
         theme="colored"
+        limit={3}
       />
     </div>
   );

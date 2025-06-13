@@ -43,7 +43,7 @@ const AnalysisCopy = () => {
 
       const prescriptionData = await prescriptionResponse.json();
       setData1(prescriptionData.data);
-      
+
       if (prescriptionData.data?.test6?.medicines) {
         setSelectedOptions4({
           medicines: prescriptionData.data.test6.medicines,
@@ -65,12 +65,14 @@ const AnalysisCopy = () => {
       // Set diagnosis data
       if (hairTest) {
         setSelectedOptions(hairTest.dianosis || []);
-        setSelectedTests(hairTest.bloodTest || {
-          mainTests: [],
-          subTests: {
-            "Blood Sugar": [],
-          },
-        });
+        setSelectedTests(
+          hairTest.bloodTest || {
+            mainTests: [],
+            subTests: {
+              "Blood Sugar": [],
+            },
+          }
+        );
       }
 
       toast.success("✅ Patient data loaded successfully!", {
@@ -90,29 +92,19 @@ const AnalysisCopy = () => {
     // fetchPatientTestResult();
   }, []);
 
+  // Add effect to handle prescription updates
+  useEffect(() => {
+    if (selectedOptions4?.medicines?.length > 0) {
+      setShowPreview(true);
+    }
+  }, [selectedOptions4]);
+
   const handleSubmit = async () => {
     try {
       toast.info("Submitting prescription...", {
         position: "top-right",
         autoClose: 1000,
       });
-
-      const prescriptionData = {
-        userId,
-        appointmentId,
-        status: "completed",
-        personal: {
-          name: data1?.personal?.name || "",
-          phone: data1?.personal?.phone || "",
-          email: data1?.personal?.email || "",
-          addressId: data1?.addressId || "",
-        },
-        test6: {
-          medicines: selectedOptions4?.medicines || [],
-        },
-        dianosis: selectedOptions,
-        bloodTest: selectedTests,
-      };
 
       const response = await fetch(
         `${BASE_URL}/doctor/prescription-detail-form?userId=${userId}`,
@@ -121,7 +113,23 @@ const AnalysisCopy = () => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(prescriptionData),
+          body: JSON.stringify({
+            userId,
+            appointmentId,
+            followUpDate: selectedOptions4?.followUpDate || null,
+            personal: {
+              name: data1?.personal?.name || "",
+              phone: data1?.personal?.phone || "",
+              email: data1?.personal?.email || "",
+              addressId: data1?.addressId || "",
+            },
+            dianosis: selectedOptions,
+            test6: selectedOptions4,
+            bloodTest: selectedTests,
+            medicines: selectedOptions4?.medicines
+              ? Object.keys(selectedOptions4?.medicines[0])
+              : "",
+          }),
         }
       );
 
@@ -137,8 +145,6 @@ const AnalysisCopy = () => {
         position: "top-right",
         autoClose: 5000,
       });
-      
-      // navigate("/appointment");
     } catch (error) {
       console.error("Error submitting prescription:", error);
       toast.error(`❌ ${error.message || "Failed to submit prescription"}`, {
@@ -176,8 +182,8 @@ const AnalysisCopy = () => {
           setSelectedTests={setSelectedTests}
         />
       </div>
-      
-      {showPreview && (
+
+      {showPreview && selectedOptions4?.medicines?.length > 0 && (
         <PrescriptionUser
           data={{
             preview: "preview",
@@ -189,13 +195,12 @@ const AnalysisCopy = () => {
             },
             dianosis: selectedOptions,
             bloodTest: selectedTests,
-            test6: {
-              medicines: selectedOptions4?.medicines || [],
-            },
+            test6: selectedOptions4,
+            followUpDate: selectedOptions4?.followUpDate || null,
           }}
         />
       )}
-      
+
       <div
         style={{
           display: "flex",
@@ -217,11 +222,17 @@ const AnalysisCopy = () => {
             transition: "all 0.3s ease",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
-          onClick={() => setShowPreview(!showPreview)}
+          onClick={() => {
+            if (selectedOptions4?.medicines?.length > 0) {
+              setShowPreview(!showPreview);
+            } else {
+              toast.warning("Please add medicines before previewing");
+            }
+          }}
         >
           {showPreview ? "Close Preview" : "Preview"}
         </button>
-        
+
         <button
           style={{
             padding: "12px 24px",
@@ -235,12 +246,18 @@ const AnalysisCopy = () => {
             transition: "all 0.3s ease",
             boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
           }}
-          onClick={handleSubmit}
+          onClick={() => {
+            if (selectedOptions4?.medicines?.length > 0) {
+              handleSubmit();
+            } else {
+              toast.warning("Please add medicines before submitting");
+            }
+          }}
         >
           Submit Prescription
         </button>
       </div>
-      
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

@@ -264,16 +264,30 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
   };
 
   const savePrescription = () => {
-    // Only update the medicines that are in selectedOptions
-    const formattedMedicines = selectedOptions.medicines.map(medicine => ({
-      ...medicine,
-      ...prescriptions[medicine.name],
+    // Create medicines data with all details
+    const medicinesData = selectedOptions.medicines.map(medicine => ({
+      kit: medicine.name,
+      medicines: {
+        [medicine.name]: {
+          route: prescriptions[medicine.name]?.route || "Oral",
+          subCategory: prescriptions[medicine.name]?.subCategory || "Tablets",
+          quantity: prescriptions[medicine.name]?.quantity || "1",
+          dosage: prescriptions[medicine.name]?.dosage || "",
+          frequency: prescriptions[medicine.name]?.frequency || "Daily at night",
+          when: prescriptions[medicine.name]?.when || "Before food",
+          duration: prescriptions[medicine.name]?.duration || "1 month",
+          instructions: prescriptions[medicine.name]?.instructions || "",
+          price: medicine.price,
+          description: medicine.description
+        }
+      }
     }));
 
     if (setSelectedOptions) {
       setSelectedOptions(prev => ({
         ...prev,
-        medicines: formattedMedicines,
+        medicines: medicinesData,
+        _timestamp: new Date().getTime() // Force update
       }));
     }
     toast.success("Medicine instructions updated in prescription");

@@ -53,7 +53,7 @@ function App() {
 
           {/* <Route path="/followup/analysis/:id" element={<AnalysisCopy />} /> */}
 
-          <Route path="/Prescription-Only/:id" element={<PrescriptionOnly />} />
+          <Route path="/prescription_only/:id" element={<PrescriptionOnly />} />
         </Routes>
       </BrowserRouter>
     </QueryClientProvider>

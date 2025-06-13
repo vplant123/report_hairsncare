@@ -214,6 +214,7 @@ export default function Test6({
   const [newMedicine, setNewMedicine] = useState("");
   const [addedMedicines, setAddedMedicines] = useState([]);
   const [kitItems, setKitItems] = useState([]);
+  const [followUpDate, setFollowUpDate] = useState("");
 
   useEffect(() => {
     const defaultValues = {
@@ -228,7 +229,7 @@ export default function Test6({
     };
 
     const allMedicines = currentKits
-      .flatMap(kit => (kit.kit.length > 0 ? kit.kit : kit.name))
+      .flatMap((kit) => (kit.kit.length > 0 ? kit.kit : kit.name))
       .concat(addedMedicines);
     console.log("korekojg", allMedicines);
     let initialPrescriptions = {};
@@ -262,31 +263,85 @@ export default function Test6({
     fetchProducts();
   }, []);
 
-  const handleCheckboxChange = kit => {
+  const handleCheckboxChange = (kit) => {
     // console.log("jjewoj",kit)
-    setCurrentKits(prev =>
-      prev.some(selectedKit => selectedKit._id === kit._id)
-        ? prev.filter(selectedKit => selectedKit._id !== kit._id)
+    setCurrentKits((prev) =>
+      prev.some((selectedKit) => selectedKit._id === kit._id)
+        ? prev.filter((selectedKit) => selectedKit._id !== kit._id)
         : [...prev, kit]
     );
   };
 
   const savePrescription = () => {
-    console.log("jjewoj", currentKits);
+    const medicinesData = currentKits.map(kit => {
+      const kitMedicines = {};
+      
+      // Add the kit's own medicine if it's not in a kit array
+      if (!kit.kit.length) {
+        kitMedicines[kit.name] = {
+          route: prescriptions[kit.name]?.route || "Oral",
+          subCategory: prescriptions[kit.name]?.subCategory || "Tablets",
+          quantity: prescriptions[kit.name]?.quantity || "1",
+          dosage: prescriptions[kit.name]?.dosage || "",
+          frequency: prescriptions[kit.name]?.frequency || "Daily at night",
+          when: prescriptions[kit.name]?.when || "Before food",
+          duration: prescriptions[kit.name]?.duration || "1 month",
+          instructions: prescriptions[kit.name]?.instructions || ""
+        };
+      }
+
+      // Add medicines from the kit array
+      kit.kit.forEach(medicineName => {
+        kitMedicines[medicineName] = {
+          route: prescriptions[medicineName]?.route || "Oral",
+          subCategory: prescriptions[medicineName]?.subCategory || "Tablets",
+          quantity: prescriptions[medicineName]?.quantity || "1",
+          dosage: prescriptions[medicineName]?.dosage || "",
+          frequency: prescriptions[medicineName]?.frequency || "Daily at night",
+          when: prescriptions[medicineName]?.when || "Before food",
+          duration: prescriptions[medicineName]?.duration || "1 month",
+          instructions: prescriptions[medicineName]?.instructions || ""
+        };
+      });
+
+      return {
+        kit: kit.name,
+        medicines: kitMedicines
+      };
+    });
+
+    // Add any manually added medicines
+    addedMedicines.forEach(medicineName => {
+      medicinesData.push({
+        kit: medicineName,
+        medicines: {
+          [medicineName]: {
+            route: prescriptions[medicineName]?.route || "Oral",
+            subCategory: prescriptions[medicineName]?.subCategory || "Tablets",
+            quantity: prescriptions[medicineName]?.quantity || "1",
+            dosage: prescriptions[medicineName]?.dosage || "",
+            frequency: prescriptions[medicineName]?.frequency || "Daily at night",
+            when: prescriptions[medicineName]?.when || "Before food",
+            duration: prescriptions[medicineName]?.duration || "1 month",
+            instructions: prescriptions[medicineName]?.instructions || ""
+          }
+        }
+      });
+    });
+
     setSelectedOptions(prev => ({
       ...prev,
-      medicines: currentKits.map(kit => ({
-        kit: kit.name,
-        medicines: prescriptions,
-      })),
+      medicines: medicinesData,
+      followUpDate: followUpDate
     }));
-    toast.success("Medicine added in prescription");
+
+    toast.success("Medicine instructions updated in prescription");
   };
 
-  const handleMainCheckboxChange = test => {
-    setSelectedTests(prev => {
+  const handleMainCheckboxChange = (test) => {
+    setSelectedTests((prev) => {
       const updatedMainTests = prev.mainTests.includes(test)
-        ? prev.mainTests.filter(item => item !== test)
+        ? prev.mainTests.filter((item) => item !== test)
         : [...prev.mainTests, test];
 
       return {
@@ -297,12 +352,12 @@ export default function Test6({
   };
   // console.log(Object.keys(selectedOptions.medicines[0]),'fhhffh')
   const handleSubCheckboxChange = (mainTest, subTest) => {
-    setSelectedTests(prev => {
+    setSelectedTests((prev) => {
       const updatedSubTests = prev.subTests[mainTest]?.includes(subTest)
         ? {
             ...prev.subTests,
             [mainTest]: prev.subTests[mainTest].filter(
-              item => item !== subTest
+              (item) => item !== subTest
             ),
           }
         : {
@@ -319,7 +374,7 @@ export default function Test6({
 
   const handleAddMedicine = () => {
     if (newMedicine.trim()) {
-      setAddedMedicines(prev => [...prev, newMedicine.trim()]);
+      setAddedMedicines((prev) => [...prev, newMedicine.trim()]);
       setNewMedicine("");
     }
   };
@@ -354,7 +409,7 @@ export default function Test6({
           padding: "1rem",
         }}
       >
-        {kitItems?.map(kit => (
+        {kitItems?.map((kit) => (
           <div
             key={kit._id}
             style={{
@@ -376,7 +431,7 @@ export default function Test6({
               <input
                 type="checkbox"
                 checked={currentKits.some(
-                  selectedKit => selectedKit._id === kit._id
+                  (selectedKit) => selectedKit._id === kit._id
                 )}
                 onChange={() => handleCheckboxChange(kit)}
               />
@@ -384,7 +439,7 @@ export default function Test6({
                 <h2>{kit.name}</h2>
                 {kit.kit.length > 0 && (
                   <div>
-                    {kit.kit.map(item => (
+                    {kit.kit.map((item) => (
                       <p key={item}>{item}</p>
                     ))}
                   </div>
@@ -399,19 +454,47 @@ export default function Test6({
           <h2>Instructions</h2>
           <DoctorPrescribe
             medicines={currentKits
-              .flatMap(kit => (kit.kit.length > 0 ? kit.kit : [kit.name]))
+              .flatMap((kit) => (kit.kit.length > 0 ? kit.kit : [kit.name]))
               .concat(addedMedicines)}
             prescriptions={prescriptions}
             setPrescriptions={setPrescriptions}
           />
+          <div style={{ margin: "1rem 0" }}>
+            <label style={{ marginRight: "1rem", fontSize: "1rem" }}>
+              Follow-up Date:
+            </label>
+            <input
+              type="date"
+              value={followUpDate}
+              onChange={(e) => setFollowUpDate(e.target.value)}
+              min={new Date().toISOString().split("T")[0]}
+              style={{ padding: "0.5rem" }}
+            />
+          </div>
           <input
             type="text"
             value={newMedicine}
-            onChange={e => setNewMedicine(e.target.value)}
+            onChange={(e) => setNewMedicine(e.target.value)}
             placeholder="Add new medicine"
           />
           <button onClick={handleAddMedicine}>Add Medicine</button>
-          <button onClick={savePrescription}>Save Prescription</button>
+          <button 
+            onClick={() => {
+              savePrescription();
+              // Force a re-render of the parent component
+              setSelectedOptions((prev) => ({
+                ...prev,
+                medicines: currentKits.map((kit) => ({
+                  kit: kit.name,
+                  medicines: prescriptions,
+                })),
+                followUpDate: followUpDate,
+                _timestamp: new Date().getTime() // Add a timestamp to force update
+              }));
+            }}
+          >
+            Save Prescription
+          </button>
         </div>
       )}
       <h2 className="diag1">Tests</h2>
@@ -423,7 +506,7 @@ export default function Test6({
           padding: "1rem",
         }}
       >
-        {tests.map(test => (
+        {tests.map((test) => (
           <label
             key={test}
             style={{
@@ -451,7 +534,7 @@ export default function Test6({
             padding: "1rem",
           }}
         >
-          {bloodSugarSubTests.map(subTest => (
+          {bloodSugarSubTests.map((subTest) => (
             <label
               key={subTest}
               style={{

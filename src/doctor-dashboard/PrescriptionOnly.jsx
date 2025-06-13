@@ -146,16 +146,20 @@ const PrescriptionOnly = () => {
       const test6Data = {
         medicines: selectedOptions4?.medicines.map((medicine) => ({
           kit: medicine.name,
-          route: medicine.route || "Oral",
-          subCategory: medicine.subCategory || "Tablets",
-          quantity: medicine.quantity || "1",
-          dosage: medicine.dosage || "",
-          frequency: medicine.frequency || "Daily at night",
-          when: medicine.when || "Before food",
-          duration: medicine.duration || "1 month",
-          instructions: medicine.instructions || "",
-          price: medicine.price,
-          description: medicine.description,
+          medicines: {
+            [medicine.name]: {
+              route: medicine.route || "Oral",
+              subCategory: medicine.subCategory || "Tablets",
+              quantity: medicine.quantity || "1",
+              dosage: medicine.dosage || "",
+              frequency: medicine.frequency || "Daily at night",
+              when: medicine.when || "Before food",
+              duration: medicine.duration || "1 month",
+              instructions: medicine.instructions || "",
+              price: medicine.price,
+              description: medicine.description,
+            },
+          },
         })),
       };
 
@@ -179,6 +183,7 @@ const PrescriptionOnly = () => {
         stress: data1?.stress || {},
         management: data1?.management || {},
         bloodTest: data1?.bloodTest || {},
+        showToUser: true,
       };
 
       console.log("Submitting prescription data:", prescriptionData);
@@ -205,7 +210,7 @@ const PrescriptionOnly = () => {
       console.log("Prescription submission response:", responseData);
       toast.success("✅ Prescription submitted successfully!", {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -221,7 +226,7 @@ const PrescriptionOnly = () => {
       console.error("Error submitting prescription:", error);
       toast.error(`❌ ${error.message || "Failed to submit prescription"}`, {
         position: "top-right",
-        autoClose: 5000,
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,

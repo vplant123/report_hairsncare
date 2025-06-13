@@ -22,7 +22,6 @@ import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import PrescriptionUser from "./PrescriptionUser.jsx";
 
-
 // import { textAlign } from "html2canvas/dist/types/css/property-descriptors/text-align";
 
 const Analysis = () => {
@@ -80,7 +79,7 @@ const Analysis = () => {
     fetchPatientTestResult();
   }, [haiTestId]);
 
-  const handleColorChange = color => {
+  const handleColorChange = (color) => {
     setCircleColor(color);
   };
 
@@ -121,31 +120,31 @@ const Analysis = () => {
   };
   const prevStep = () => setCurrentStep(currentStep - 1);
 
-  const handleExamination = color => {
+  const handleExamination = (color) => {
     setStatisfication(true);
     console.log("jeirj", color);
     setExaminationColor(color);
   };
 
-  const handleDensity = color => {
+  const handleDensity = (color) => {
     setStatisfication(true);
     setDensityColor(color);
   };
 
-  const handleMoisture = color => {
+  const handleMoisture = (color) => {
     setStatisfication(true);
     setMoistureColor(color);
   };
 
-  const handleQuality = color => {
+  const handleQuality = (color) => {
     setStatisfication(true);
     setQualityColor(color);
   };
-  const handleVibrancy = color => {
+  const handleVibrancy = (color) => {
     setStatisfication(true);
     setVibrancy(color);
   };
-  const handleBreakage = color => {
+  const handleBreakage = (color) => {
     setStatisfication(true);
     setBreakageColor(color);
   };
@@ -198,6 +197,7 @@ const Analysis = () => {
           body: JSON.stringify({
             userId,
             appointmentId,
+            followUpDate: selectedOptions4?.followUpDate || null,
             personal,
             dianosis: selectedOptions,
             hairScalp: { selectedOption, data: dd },
@@ -214,6 +214,7 @@ const Analysis = () => {
           }),
         }
       );
+      console.log("response", response);
       console.log({
         userId,
         appointmentId,
@@ -226,6 +227,7 @@ const Analysis = () => {
         stress: selectedOption3,
         test6: selectedOptions4,
         management: selectedOptions5,
+        followUpDate: selectedOptions4?.followUpDate,
       });
 
       if (!response.ok) {
@@ -233,7 +235,6 @@ const Analysis = () => {
       }
       toast.success("successful");
       const data = await response.json();
-      navigate("/appointment");
 
       console.log(data, "successfully");
     } catch (error) {
