@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import DoctorPrescribe from "../doctor-dashboard/analysis/DoctorPrescribe"; // Adjust the import path as needed
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchAllProductAsync } from "../../products/productSlice";
 import BASE_URL from "../Config";
 import { toast } from "react-toastify";
 
@@ -201,8 +199,6 @@ let kits = [
   },
 ];
 
-// import { fetchAllProduct } from "../../products/ProductsApi";
-
 export default function Test6({ selectedOptions, setSelectedOptions }) {
   const [currentKits, setCurrentKits] = useState([]);
   const [prescriptions, setPrescriptions] = useState({});
@@ -214,7 +210,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
   useEffect(() => {
     if (selectedOptions?.medicines?.length > 0) {
       const initialPrescriptions = {};
-      selectedOptions.medicines.forEach(medicine => {
+      selectedOptions.medicines.forEach((medicine) => {
         initialPrescriptions[medicine.name] = {
           route: medicine.route || "Oral",
           subCategory: medicine.subCategory || "Tablets",
@@ -234,14 +230,17 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
     const fetchProducts = async () => {
       try {
         const response = await fetch(`${BASE_URL}/admin/product`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch products: ${response.status}`);
+        }
         const data = await response.json();
         setKitItems(data.message);
 
         // Pre-select medicines from selectedOptions
         if (selectedOptions?.medicines?.length > 0) {
-          const preSelectedKits = data.message.filter(kit =>
+          const preSelectedKits = data.message.filter((kit) =>
             selectedOptions.medicines.some(
-              medicine =>
+              (medicine) =>
                 medicine.name === kit.name || kit.kit.includes(medicine.name)
             )
           );
@@ -249,45 +248,47 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
         }
       } catch (error) {
         console.error("Error fetching products:", error);
+        toast.error(`❌ Failed to fetch products: ${error.message}`);
       }
     };
 
     fetchProducts();
   }, [selectedOptions]);
 
-  const handleCheckboxChange = kit => {
-    setCurrentKits(prev =>
-      prev.some(selectedKit => selectedKit._id === kit._id)
-        ? prev.filter(selectedKit => selectedKit._id !== kit._id)
+  useEffect(() => {
+    // Debug log to verify selectedOptions updates
+    console.log("Updated selectedOptions:", selectedOptions);
+  }, [selectedOptions]);
+
+  const handleCheckboxChange = (kit) => {
+    setCurrentKits((prev) =>
+      prev.some((selectedKit) => selectedKit._id === kit._id)
+        ? prev.filter((selectedKit) => selectedKit._id !== kit._id)
         : [...prev, kit]
     );
   };
 
   const savePrescription = () => {
-    // Create medicines data with all details
-    const medicinesData = selectedOptions.medicines.map(medicine => ({
-      kit: medicine.name,
-      medicines: {
-        [medicine.name]: {
-          route: prescriptions[medicine.name]?.route || "Oral",
-          subCategory: prescriptions[medicine.name]?.subCategory || "Tablets",
-          quantity: prescriptions[medicine.name]?.quantity || "1",
-          dosage: prescriptions[medicine.name]?.dosage || "",
-          frequency: prescriptions[medicine.name]?.frequency || "Daily at night",
-          when: prescriptions[medicine.name]?.when || "Before food",
-          duration: prescriptions[medicine.name]?.duration || "1 month",
-          instructions: prescriptions[medicine.name]?.instructions || "",
-          price: medicine.price,
-          description: medicine.description
-        }
-      }
+    // Maintain flat structure for medicines
+    const medicinesData = selectedOptions.medicines.map((medicine) => ({
+      name: medicine.name,
+      route: prescriptions[medicine.name]?.route || "Oral",
+      subCategory: prescriptions[medicine.name]?.subCategory || "Tablets",
+      quantity: prescriptions[medicine.name]?.quantity || "1",
+      dosage: prescriptions[medicine.name]?.dosage || "",
+      frequency: prescriptions[medicine.name]?.frequency || "Daily at night",
+      when: prescriptions[medicine.name]?.when || "Before food",
+      duration: prescriptions[medicine.name]?.duration || "1 month",
+      instructions: prescriptions[medicine.name]?.instructions || "",
+      price: medicine.price,
+      description: medicine.description,
     }));
 
     if (setSelectedOptions) {
-      setSelectedOptions(prev => ({
+      setSelectedOptions((prev) => ({
         ...prev,
         medicines: medicinesData,
-        _timestamp: new Date().getTime() // Force update
+        _timestamp: new Date().getTime(), // Force update
       }));
     }
     toast.success("Medicine instructions updated in prescription");
@@ -295,7 +296,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
 
   const handleAddMedicine = () => {
     if (newMedicine.trim()) {
-      setAddedMedicines(prev => [...prev, newMedicine.trim()]);
+      setAddedMedicines((prev) => [...prev, newMedicine.trim()]);
       setNewMedicine("");
     }
   };
@@ -311,7 +312,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
           padding: "1rem",
         }}
       >
-        {kitItems?.map(kit => (
+        {kitItems?.map((kit) => (
           <div
             key={kit._id}
             style={{
@@ -333,7 +334,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               <input
                 type="checkbox"
                 checked={currentKits.some(
-                  selectedKit => selectedKit._id === kit._id
+                  (selectedKit) => selectedKit._id === kit._id
                 )}
                 onChange={() => handleCheckboxChange(kit)}
               />
@@ -341,7 +342,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
                 <h2>{kit.name}</h2>
                 {kit.kit.length > 0 && (
                   <div>
-                    {kit.kit.map(item => (
+                    {kit.kit.map((item) => (
                       <p key={item}>{item}</p>
                     ))}
                   </div>
@@ -352,11 +353,11 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
         ))}
       </div>
 
-      {selectedOptions?.medicines?.length > 0 && (
+      {selectedOptions?.medicines?.length > 0 ? (
         <div>
           <h2>Instructions for Selected Medicines</h2>
           <DoctorPrescribe
-            medicines={selectedOptions.medicines.map(med => med.name)}
+            medicines={selectedOptions.medicines.map((med) => med.name)}
             prescriptions={prescriptions}
             setPrescriptions={setPrescriptions}
           />
@@ -379,12 +380,12 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               justifyContent: "center",
               gap: "8px",
             }}
-            onMouseOver={e => {
+            onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = "#45a049";
               e.currentTarget.style.transform = "translateY(-2px)";
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
             }}
-            onMouseOut={e => {
+            onMouseOut={(e) => {
               e.currentTarget.style.backgroundColor = "#4CAF50";
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";
@@ -408,6 +409,8 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
             Update Instructions
           </button>
         </div>
+      ) : (
+        <p>No medicines selected.</p>
       )}
     </>
   );

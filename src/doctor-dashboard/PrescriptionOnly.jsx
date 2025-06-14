@@ -2,20 +2,15 @@ import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import BASE_URL from "../Config";
-// import BASE_URL from '../../../Config';
 import { useParams } from "react-router-dom";
 import "./Analysis.css";
 import "./DoctorAnalysisReport.css";
 
 import Test6 from "./Test6.jsx";
-
-// import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import PrescriptionUser from "./PrescriptionUser.jsx";
-
-// import { textAlign } from "html2canvas/dist/types/css/property-descriptors/text-align";
 
 const PrescriptionOnly = () => {
   const [data1, setData1] = useState({});
@@ -38,7 +33,6 @@ const PrescriptionOnly = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            // Add any auth headers if required
           },
         }
       );
@@ -142,7 +136,7 @@ const PrescriptionOnly = () => {
         progress: undefined,
       });
 
-      // Create the test6 object with medicines array and individual medicine details
+      // Transform flat medicines structure into nested structure for API
       const test6Data = {
         medicines: selectedOptions4?.medicines.map((medicine) => ({
           kit: medicine.name,
@@ -269,7 +263,7 @@ const PrescriptionOnly = () => {
             personal: {
               name: data1?.userId?.fullname || "",
               phone: data1?.userId?.mobile || "",
-              email: data1?.userId?.email || "", // You might want to add this to your user data if needed
+              email: data1?.userId?.email || "",
               addressId: data1?.addressId || "",
             },
             bloodTest: {
