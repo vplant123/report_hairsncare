@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import DoctorPrescribe from "./DoctorPrescribe"; // Adjust the import path as needed
-// import { useDispatch, useSelector } from "react-redux";
-// import { fetchAllProductAsync } from "../../products/productSlice";
 import BASE_URL from "../../Config";
 import { toast } from "react-toastify";
 
@@ -201,8 +199,6 @@ let kits = [
   },
 ];
 
-// import { fetchAllProduct } from "../../products/ProductsApi";
-
 export default function Test6({
   selectedOptions,
   setSelectedOptions,
@@ -231,7 +227,6 @@ export default function Test6({
     const allMedicines = currentKits
       .flatMap((kit) => (kit.kit.length > 0 ? kit.kit : kit.name))
       .concat(addedMedicines);
-    console.log("korekojg", allMedicines);
     let initialPrescriptions = {};
 
     for (let index = 0; index < allMedicines.length; index++) {
@@ -239,11 +234,6 @@ export default function Test6({
       initialPrescriptions[element] =
         initialPrescriptions[element] || defaultValues;
     }
-    // const initialPrescriptions = allMedicines.reduce((acc, medicine) => {
-    //   acc[medicine] = acc[medicine] || defaultValues;
-    //   return acc;
-    // }, { ...prescriptions });
-    console.log("korekojg1", initialPrescriptions);
 
     setPrescriptions(initialPrescriptions);
   }, [currentKits, addedMedicines]);
@@ -253,7 +243,6 @@ export default function Test6({
       try {
         const response = await fetch(`${BASE_URL}/admin/product`);
         const data = await response.json();
-        console.log("njierjiotj", data);
         setKitItems(data.message);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -264,7 +253,6 @@ export default function Test6({
   }, []);
 
   const handleCheckboxChange = (kit) => {
-    // console.log("jjewoj",kit)
     setCurrentKits((prev) =>
       prev.some((selectedKit) => selectedKit._id === kit._id)
         ? prev.filter((selectedKit) => selectedKit._id !== kit._id)
@@ -273,9 +261,8 @@ export default function Test6({
   };
 
   const savePrescription = () => {
-    console.log("jjewoj", currentKits);
     setSelectedOptions((prev) => ({
-      ...prev,
+      // ...prev,
       medicines: currentKits.map((kit) => ({
         kit: kit.name,
         medicines: prescriptions,
@@ -298,7 +285,7 @@ export default function Test6({
       };
     });
   };
-  // console.log(Object.keys(selectedOptions.medicines[0]),'fhhffh')
+
   const handleSubCheckboxChange = (mainTest, subTest) => {
     setSelectedTests((prev) => {
       const updatedSubTests = prev.subTests[mainTest]?.includes(subTest)
@@ -426,23 +413,7 @@ export default function Test6({
             placeholder="Add new medicine"
           />
           <button onClick={handleAddMedicine}>Add Medicine</button>
-          <button 
-            onClick={() => {
-              savePrescription();
-              // Force a re-render of the parent component
-              setSelectedOptions((prev) => ({
-                ...prev,
-                medicines: currentKits.map((kit) => ({
-                  kit: kit.name,
-                  medicines: prescriptions,
-                })),
-                followUpDate: followUpDate,
-                _timestamp: new Date().getTime() // Add a timestamp to force update
-              }));
-            }}
-          >
-            Save Prescription
-          </button>
+          <button onClick={savePrescription}>Save Prescription</button>
         </div>
       )}
       <h2 className="diag1">Tests</h2>
