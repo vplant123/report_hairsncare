@@ -21,46 +21,58 @@ const PrescriptionUser = ({ data }) => {
   // Standardize medicine data format
   const getStandardizedMedicines = () => {
     if (!data?.test6?.medicines) return [];
-    
-    return data.test6.medicines.flatMap(medicine => {
-      // If medicine has a kit and medicines object
+  
+    // First, map the medicines as before
+    const mappedMedicines = data.test6.medicines.flatMap((medicine) => {
       if (medicine.kit && medicine.medicines) {
-        return Object.entries(medicine.medicines).map(([name, details]) => {
-          // Skip if details is null or undefined
-          if (!details) return null;
-          
-          return {
-            name,
-            kit: medicine.kit,
-            route: details.route || 'Oral',
-            subCategory: details.subCategory || 'Tablets',
-            quantity: details.quantity || '1',
-            dosage: details.dosage || '',
-            frequency: details.frequency || 'Daily at night',
-            when: details.when || 'Before food',
-            duration: details.duration || '1 month',
-            instructions: details.instructions || ''
-          };
-        }).filter(Boolean); // Remove any null entries
+        return Object.entries(medicine.medicines)
+          .map(([name, details]) => {
+            if (!details) return null;
+            return {
+              name,
+              kit: medicine.kit,
+              route: details.route || "Oral",
+              subCategory: details.subCategory || "Tablets",
+              quantity: details.quantity || "1",
+              dosage: details.dosage || "",
+              frequency: details.frequency || "Daily at night",
+              when: details.when || "Before food",
+              duration: details.duration || "1 month",
+              instructions: details.instructions || "",
+            };
+          })
+          .filter(Boolean);
       }
-      
-      // If medicine is a direct object with name and other properties
+  
       if (medicine.name) {
-        return [{
-          name: medicine.name,
-          kit: medicine.name,
-          route: medicine.route || 'Oral',
-          subCategory: medicine.subCategory || 'Tablets',
-          quantity: medicine.quantity || '1',
-          dosage: medicine.dosage || '',
-          frequency: medicine.frequency || 'Daily at night',
-          when: medicine.when || 'Before food',
-          duration: medicine.duration || '1 month',
-          instructions: medicine.instructions || ''
-        }];
+        return [
+          {
+            name: medicine.name,
+            kit: medicine.name,
+            route: medicine.route || "Oral",
+            subCategory: medicine.subCategory || "Tablets",
+            quantity: medicine.quantity || "1",
+            dosage: medicine.dosage || "",
+            frequency: medicine.frequency || "Daily at night",
+            when: medicine.when || "Before food",
+            duration: medicine.duration || "1 month",
+            instructions: medicine.instructions || "",
+          },
+        ];
       }
-      
-      return []; // Return empty array for invalid entries
+  
+      return [];
+    });
+  
+    // Deduplicate based on name and kit
+    const seen = new Set();
+    return mappedMedicines.filter((medicine) => {
+      const key = `${medicine.name}-${medicine.kit}`;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
     });
   };
 

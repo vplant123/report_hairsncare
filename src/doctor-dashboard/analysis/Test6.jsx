@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import DoctorPrescribe from "./DoctorPrescribe"; // Adjust the import path as needed
+import DoctorPrescribe from "./DoctorPrescribe";
 import BASE_URL from "../../Config";
 import { toast } from "react-toastify";
 
-let kits = [
+const kits = [
   {
     _id: "668c64a666655468f5b81771",
     name: "Jj",
@@ -261,16 +261,53 @@ export default function Test6({
   };
 
   const savePrescription = () => {
-    setSelectedOptions((prev) => ({
-      // ...prev,
-      medicines: currentKits.map((kit) => ({
-        kit: kit.name,
-        medicines: prescriptions,
-      })),
-      followUpDate: followUpDate,
-    }));
+    setSelectedOptions((prev) => {
+      // Get all medicines from currentKits and addedMedicines
+      const allMedicines = currentKits
+        .flatMap((kit) => (kit.kit.length > 0 ? kit.kit : kit.name))
+        .concat(addedMedicines);
+
+      // Deduplicate medicines by name
+      const uniqueMedicines = [...new Set(allMedicines)];
+
+      // Create a new medicines object with the deduplicated medicines
+      const newMedicines = uniqueMedicines.reduce((acc, medicine) => {
+        acc[medicine] = prescriptions[medicine] || {
+          route: "Oral",
+          subCategory: "Tablets",
+          quantity: "1",
+          dosage: "",
+          frequency: "Daily at night",
+          when: "Before food",
+          duration: "1 month",
+          instructions: "",
+        };
+        return acc;
+      }, {});
+
+      // Merge with existing medicines, if any
+      const existingMedicines = prev.medicines?.[0]?.medicines || {};
+      const mergedMedicines = { ...existingMedicines, ...newMedicines };
+
+      return {
+        ...prev,
+        medicines: [
+          {
+            kit:
+              currentKits.map((kit) => kit.name).join(", ") ||
+              "Custom Medicines",
+            medicines: mergedMedicines,
+          },
+        ],
+        followUpDate: followUpDate,
+      };
+    });
 
     toast.success("Medicine instructions updated in prescription");
+
+    // Reset states after saving
+    setAddedMedicines([]);
+    setCurrentKits([]);
   };
 
   const handleMainCheckboxChange = (test) => {

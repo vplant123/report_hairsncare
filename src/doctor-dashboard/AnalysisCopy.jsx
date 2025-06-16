@@ -43,6 +43,7 @@ const AnalysisCopy = () => {
 
       const prescriptionData = await prescriptionResponse.json();
       setData1(prescriptionData.data);
+      console.log(data1);
 
       if (prescriptionData.data?.test6?.medicines) {
         setSelectedOptions4({
