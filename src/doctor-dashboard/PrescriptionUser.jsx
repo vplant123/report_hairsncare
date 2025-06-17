@@ -21,7 +21,7 @@ const PrescriptionUser = ({ data }) => {
   // Standardize medicine data format
   const getStandardizedMedicines = () => {
     if (!data?.test6?.medicines) return [];
-  
+
     // First, map the medicines as before
     const mappedMedicines = data.test6.medicines.flatMap((medicine) => {
       if (medicine.kit && medicine.medicines) {
@@ -43,7 +43,7 @@ const PrescriptionUser = ({ data }) => {
           })
           .filter(Boolean);
       }
-  
+
       if (medicine.name) {
         return [
           {
@@ -60,10 +60,10 @@ const PrescriptionUser = ({ data }) => {
           },
         ];
       }
-  
+
       return [];
     });
-  
+
     // Deduplicate based on name and kit
     const seen = new Set();
     return mappedMedicines.filter((medicine) => {
@@ -97,6 +97,7 @@ const PrescriptionUser = ({ data }) => {
 
     if (userId) {
       fetchCartItems();
+      console.log(data);
     }
   }, [userId]);
 
@@ -117,7 +118,7 @@ const PrescriptionUser = ({ data }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        onClose: () => setLoader(false)
+        onClose: () => setLoader(false),
       });
 
       // Create cart items from the standardized medicines
@@ -203,7 +204,7 @@ const PrescriptionUser = ({ data }) => {
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
-        onClose: () => setLoading(false)
+        onClose: () => setLoading(false),
       });
 
       const element = contentRef.current;
@@ -217,7 +218,7 @@ const PrescriptionUser = ({ data }) => {
 
       await html2pdf().from(element).set(opt).save();
       setLoading(false);
-      
+
       toast.success("📄 PDF generated successfully!", {
         position: "top-right",
         autoClose: 5000,
@@ -423,7 +424,13 @@ const PrescriptionUser = ({ data }) => {
                           fontWeight: "600",
                         }}
                       >
-                        {`${medicine.dosage || ""} ${medicine.route || "Oral"} ${medicine.subCategory || "Tablets"} ${medicine.frequency || "Daily"} ${medicine.when || ""} ${medicine.duration || ""} ${medicine.instructions || ""}`}
+                        {`${medicine.dosage || ""} ${
+                          medicine.route || "Oral"
+                        } ${medicine.subCategory || "Tablets"} ${
+                          medicine.frequency || "Daily"
+                        } ${medicine.when || ""} ${medicine.duration || ""} ${
+                          medicine.instructions || ""
+                        }`}
                       </div>
                     </div>
                   ))}

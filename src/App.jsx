@@ -15,6 +15,7 @@ import PrescriptionOnly from "./doctor-dashboard/PrescriptionOnly.jsx";
 import AnalysisCopy from "./doctor-dashboard/AnalysisCopy.jsx";
 import FollowUpDoctorAnalysis from "./Reports/DoctorAnalysis/indexs.jsx";
 import TestResults from "./doctor-dashboard/TestResults.jsx";
+import OrderReport from "./Rpage/OrderReport.jsx";
 // import DoctorNavbar from "./doctor-dashboard/DoctorNavbar.jsx";
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -28,6 +29,8 @@ function App() {
 
           {/* Protected Routes */}
           <Route path="/doctor/report/:id" element={<Report />} />
+
+          <Route path="/order-prescription/:id" element={<OrderReport />} />
           <Route
             path="/doctor-analyse-report/:id"
             element={<DoctorAnalysis />}

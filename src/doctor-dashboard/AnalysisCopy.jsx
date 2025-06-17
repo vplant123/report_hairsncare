@@ -192,7 +192,8 @@ const AnalysisCopy = () => {
               name: data1?.personal?.name || "",
               phone: data1?.personal?.phone || "",
               email: data1?.personal?.email || "",
-              addressId: data1?.addressId || "",
+              addressId:
+                data1?.personal?.addressId || "",
             },
             dianosis: selectedOptions,
             bloodTest: selectedTests,
