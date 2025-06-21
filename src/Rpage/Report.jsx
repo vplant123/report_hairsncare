@@ -28,7 +28,7 @@ export default function Report(props) {
         }
         const result = await response.json();
         setData(result.data);
-        console.log("ojiejwije", result.data);
+        console.log(`${params.id} this is the data`, result.data);
       } catch (error) {
         console.error(error);
       }
