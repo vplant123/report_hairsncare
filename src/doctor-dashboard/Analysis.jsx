@@ -211,7 +211,7 @@ const Analysis = () => {
             medicines: selectedOptions4?.medicines
               ? Object.keys(selectedOptions4?.medicines[0])
               : "",
-            followUpDate: selectedOptions4?.followUpDate || null
+            followUpDate: selectedOptions4?.followUpDate || null,
           }),
         }
       );
@@ -236,6 +236,9 @@ const Analysis = () => {
       }
       toast.success("successful");
       const data = await response.json();
+      window.open(
+        `${import.meta.env.VITE_FRONTEND_URL}/appointment`
+      );
 
       console.log(data, "successfully");
     } catch (error) {

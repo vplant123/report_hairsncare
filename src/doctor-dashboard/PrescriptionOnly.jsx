@@ -216,6 +216,9 @@ const PrescriptionOnly = () => {
           fontWeight: "bold",
         },
       });
+      window.open(
+        `${import.meta.env.VITE_FRONTEND_URL}/Generate-Prescription-for-Orders`
+      );
     } catch (error) {
       console.error("Error submitting prescription:", error);
       toast.error(`❌ ${error.message || "Failed to submit prescription"}`, {

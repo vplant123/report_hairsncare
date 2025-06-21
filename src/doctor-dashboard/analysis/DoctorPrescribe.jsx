@@ -1,9 +1,14 @@
 // export default DoctorPrescribe;
 import React from "react";
 
-function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
+function DoctorPrescribe({
+  medicines,
+  prescriptions,
+  setPrescriptions,
+  handleRemoveMedicine,
+}) {
   const handleChange = (medicine, field, value) => {
-    setPrescriptions(prev => ({
+    setPrescriptions((prev) => ({
       ...prev,
       [medicine]: {
         ...prev[medicine],
@@ -17,7 +22,21 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
       {/* <h2>Prescribe Medications</h2> */}
       {medicines.map((medicine, index) => (
         <div style={{ marginTop: "1rem" }} key={index}>
-          <h3 style={{ color: "blue" }}>{medicine}</h3>
+          <div className="d-flex gap-5">
+            <h3 style={{ color: "blue" }}>{medicine}</h3>
+
+            <button
+              onClick={() => handleRemoveMedicine(medicine)}
+              className="btn px-1 py-1"
+              style={{
+                color: "red",
+                // border: "1px solid red",
+              }}
+            >
+              Remove
+            </button>
+          </div>
+
           <table className="prescription-table">
             <thead>
               <tr>
@@ -36,7 +55,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                 <td>
                   <select
                     value={prescriptions[medicine]?.route || "Oral"}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "route", e.target.value)
                     }
                   >
@@ -49,7 +68,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                 <td>
                   <select
                     value={prescriptions[medicine]?.subCategory || ""}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "subCategory", e.target.value)
                     }
                   >
@@ -81,7 +100,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                   <input
                     type="number"
                     value={prescriptions[medicine]?.quantity || ""}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "quantity", e.target.value)
                     }
                     placeholder="quantity by Doctor"
@@ -91,7 +110,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                   <input
                     type="text"
                     value={prescriptions[medicine]?.dosage || ""}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "dosage", e.target.value)
                     }
                     placeholder="Dosage instruction by Doctor"
@@ -102,7 +121,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                     value={
                       prescriptions[medicine]?.frequency || "Daily at night"
                     }
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "frequency", e.target.value)
                     }
                   >
@@ -120,7 +139,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                 <td>
                   <select
                     value={prescriptions[medicine]?.when || "Before food"}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "when", e.target.value)
                     }
                   >
@@ -132,7 +151,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                 <td>
                   <select
                     value={prescriptions[medicine]?.duration || "1 month"}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "duration", e.target.value)
                     }
                   >
@@ -178,7 +197,7 @@ function DoctorPrescribe({ medicines, prescriptions, setPrescriptions }) {
                   <input
                     type="text"
                     value={prescriptions[medicine]?.instructions || ""}
-                    onChange={e =>
+                    onChange={(e) =>
                       handleChange(medicine, "instructions", e.target.value)
                     }
                     placeholder="Special instructions by Doctor"

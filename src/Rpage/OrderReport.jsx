@@ -199,43 +199,44 @@ export default function OrderReport(props) {
                   Prescription
                 </div>
                 <div>
-                  {Object.keys(prescriptionM).map((it, ind) => (
-                    <div
-                      key={it}
-                      className={`d-flex flex-column ${
-                        [p, p + 10, p + 20].includes(ind + 1)
-                          ? "page-break-1"
-                          : ""
-                      }`}
-                    >
+                  {Object.keys(prescriptionM).map((it, ind) => {
+                    const medData = prescriptionM[it]?.medicines?.[it] || {};
+                    return (
                       <div
-                        className="d-flex"
-                        style={{ fontSize: "16px", fontWeight: "600" }}
+                        key={it}
+                        className={`d-flex flex-column ${
+                          [p, p + 10, p + 20].includes(ind + 1)
+                            ? "page-break-1"
+                            : ""
+                        }`}
                       >
-                        <div>{ind + 1}.</div>
-                        <div style={{ marginLeft: "7px" }}>
-                          {it} X {prescriptionM[it].quantity}
+                        <div
+                          className="d-flex"
+                          style={{ fontSize: "16px", fontWeight: "600" }}
+                        >
+                          <div>{ind + 1}.</div>
+                          <div style={{ marginLeft: "7px" }}>
+                            {it} X {medData.quantity || "1"}
+                          </div>
+                        </div>
+                        <div
+                          style={{
+                            margin: "0 0 6px 25px",
+                            fontSize: "13px",
+                            fontWeight: "600",
+                          }}
+                        >
+                          {`${medData.dosage || ""} ${medData.route || ""} ${
+                            medData.frequency || ""
+                          } ${
+                            medData.route === "Oral" ? medData.when || "" : ""
+                          } ${medData.duration || ""} ${
+                            medData.instructions || ""
+                          }`}
                         </div>
                       </div>
-                      <div
-                        style={{
-                          margin: "0 0 6px 25px",
-                          fontSize: "13px",
-                          fontWeight: "600",
-                        }}
-                      >
-                        {`${prescriptionM[it].dosage} ${
-                          prescriptionM[it].route
-                        } ${prescriptionM[it].frequency} ${
-                          prescriptionM[it].route === "Oral"
-                            ? prescriptionM[it].when
-                            : ""
-                        } ${prescriptionM[it].duration} ${
-                          prescriptionM[it].instructions
-                        }`}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
