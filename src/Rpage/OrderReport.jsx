@@ -40,7 +40,7 @@ export default function OrderReport(props) {
   useEffect(() => {
     if (Array.isArray(data.test6?.medicines)) {
       const medList = {};
-      data.test6.medicines.forEach((med) => {
+      data.test6.medicines.forEach(med => {
         medList[med.kit] = med;
       });
       setPrescriptionM(medList);
@@ -139,9 +139,7 @@ export default function OrderReport(props) {
         </div>
 
         <div>
-          <h5 className="color-head-blue" style={{ fontWeight: "600" }}>
-            Doctor's Note/ Provisional Diagnosis
-          </h5>
+          <h5 className="color-head-blue" style={{ fontWeight: "600" }}></h5>
           {data?.dianosis?.map((item, index) => (
             <div key={index} style={{ fontSize: "14px", fontWeight: "600" }}>
               <div>

@@ -23,7 +23,7 @@ const PrescriptionUser = ({ data }) => {
     if (!data?.test6?.medicines) return [];
 
     // First, map the medicines as before
-    const mappedMedicines = data.test6.medicines.flatMap((medicine) => {
+    const mappedMedicines = data.test6.medicines.flatMap(medicine => {
       if (medicine.kit && medicine.medicines) {
         return Object.entries(medicine.medicines)
           .map(([name, details]) => {
@@ -66,7 +66,7 @@ const PrescriptionUser = ({ data }) => {
 
     // Deduplicate based on name and kit
     const seen = new Set();
-    return mappedMedicines.filter((medicine) => {
+    return mappedMedicines.filter(medicine => {
       const key = `${medicine.name}-${medicine.kit}`;
       if (seen.has(key)) {
         return false;
@@ -122,7 +122,7 @@ const PrescriptionUser = ({ data }) => {
       });
 
       // Create cart items from the standardized medicines
-      const cartItemsToAdd = getStandardizedMedicines().map((medicine) => ({
+      const cartItemsToAdd = getStandardizedMedicines().map(medicine => ({
         productId: medicine._id,
         quantity: parseInt(medicine.quantity) || 1,
       }));

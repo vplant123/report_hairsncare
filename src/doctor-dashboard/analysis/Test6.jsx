@@ -241,7 +241,7 @@ export default function Test6({
         ))}
       </div>
 
-      {/* <div style={{ margin: "1rem 0" }}>
+      <div style={{ margin: "1rem 0" }}>
         <label style={{ marginRight: "1rem" }}>Add New Medicine:</label>
         <input
           type="text"
@@ -251,7 +251,7 @@ export default function Test6({
           style={{ padding: "0.5rem", marginRight: "0.5rem" }}
         />
         <button onClick={handleAddMedicine}>Add</button>
-      </div> */}
+      </div>
 
       {(selectedMedicines.length > 0 || addedMedicines.length > 0) && (
         <div>

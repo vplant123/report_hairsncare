@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 import BASE_URL from "../Config";
-// import BASE_URL from '../../../Config';
 import { useParams } from "react-router-dom";
 import "./Analysis.css";
 import "./DoctorAnalysisReport.css";
@@ -15,14 +14,10 @@ import Test6 from "./analysis/Test6";
 import Test7 from "./analysis/Test7";
 import Test8 from "./analysis/Test8";
 import Test9 from "./analysis/Test9";
-
-// import { useSelector } from "react-redux";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
 import PrescriptionUser from "./PrescriptionUser.jsx";
-
-// import { textAlign } from "html2canvas/dist/types/css/property-descriptors/text-align";
 
 const Analysis = () => {
   const [data1, setData1] = useState({});
@@ -59,7 +54,6 @@ const Analysis = () => {
     },
   });
   const params = useParams();
-  console.log(params.id);
   const [userId, appointmentId, haiTestId] = params.id.split(",");
   const navigate = useNavigate();
 
@@ -74,7 +68,7 @@ const Analysis = () => {
       console.error("Error fetching patient test result:", err);
     }
   };
-  // Fetch patient test result data
+
   useEffect(() => {
     fetchPatientTestResult();
   }, [haiTestId]);
@@ -104,7 +98,7 @@ const Analysis = () => {
       selectedOptions5?.Nutrition?.length > 0 &&
       selectedOptions5?.LifeStyle?.length > 0 &&
       selectedOptions5?.Stress?.length > 0;
-    console.log("ineirjh", test2Q);
+
     if (
       currentStep === 1 &&
       hairScalpAna &&
@@ -118,11 +112,11 @@ const Analysis = () => {
     else if (currentStep === 2 && test2Q) setCurrentStep(currentStep + 1);
     else toast.success("Please fill all details");
   };
+
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const handleExamination = (color) => {
     setStatisfication(true);
-    console.log("jeirj", color);
     setExaminationColor(color);
   };
 
@@ -140,23 +134,40 @@ const Analysis = () => {
     setStatisfication(true);
     setQualityColor(color);
   };
+
   const handleVibrancy = (color) => {
     setStatisfication(true);
     setVibrancy(color);
   };
+
   const handleBreakage = (color) => {
     setStatisfication(true);
     setBreakageColor(color);
   };
-  console.log("mkmnrkm", data1, {
-    scalp,
-    hairQuality,
-    hairDensity,
-    colorVibrancy,
-    moisture,
-    hairBreakage,
-    selectedOptions,
-  });
+
+  const handleSkip = () => {
+    setSelectedOptions([]);
+    setSelectedOption(null);
+    setScalp("");
+    setHairQuality("");
+    setHairDensity("");
+    setColorVibrancy("");
+    setMoisture("");
+    setHairBreakage("");
+    setSelectedOption1(null);
+    setSelectedOption2(null);
+    setSelectedOption3(null);
+    setCircleColor("#ccc");
+    setExaminationColor("#ccc");
+    setDensityColor("#ccc");
+    setMoistureColor("#ccc");
+    setQualityColor("#ccc");
+    setVibrancy("#ccc");
+    setBreakageColor("#ccc");
+    setStatisfication(false);
+    setCurrentStep(3);
+  };
+
   let personal = {
     name: data1?.personal?.name,
     age: data1?.personal ? data1?.personal["Select your age group"] : "",
@@ -167,6 +178,7 @@ const Analysis = () => {
         ? "Female"
         : "Male",
   };
+
   const handleSubmit = async () => {
     let dd = {
       scalp,
@@ -186,7 +198,6 @@ const Analysis = () => {
       breakageColor,
     };
     try {
-      console.log("jkjseie", selectedOptions4);
       const response = await fetch(
         `${BASE_URL}/doctor/prescription-detail-form?userId=${userId}`,
         {
@@ -215,21 +226,6 @@ const Analysis = () => {
           }),
         }
       );
-      console.log("response", response);
-      console.log({
-        userId,
-        appointmentId,
-        personal,
-        dianosis: selectedOptions,
-        hairScalp: { selectedOption, data: dd },
-        overall,
-        nutrition: selectedOption1,
-        lifeStyle: selectedOption2,
-        stress: selectedOption3,
-        test6: selectedOptions4,
-        management: selectedOptions5,
-        followUpDate: selectedOptions4?.followUpDate,
-      });
 
       if (!response.ok) {
         throw new Error("Failed to assign doctor");
@@ -239,13 +235,10 @@ const Analysis = () => {
       window.open(
         `${import.meta.env.VITE_FRONTEND_URL}/appointment`
       );
-
-      console.log(data, "successfully");
     } catch (error) {
       console.error("Error assigning doctor:", error);
     }
   };
-  console.log(selectedOptions, "tuselectedOptionstu");
 
   return (
     <div
@@ -258,7 +251,6 @@ const Analysis = () => {
       }}
       className="checkbox-container11"
     >
-      {/* <h1 style={{ fontSize: '16px', margin: '10px 0' }}>Doctor Analyse Report</h1> */}
       <div
         id="report"
         className="report-container1"
@@ -266,11 +258,24 @@ const Analysis = () => {
       >
         {currentStep === 1 && (
           <>
+            <div style={{ textAlign: "right", marginBottom: "10px" }}>
+              <button
+                onClick={handleSkip}
+                style={{
+                  padding: "8px 16px",
+                  fontSize: "12px",
+                  backgroundColor: "#ccc",
+                  border: "none",
+                  cursor: "pointer",
+                }}
+              >
+                Skip
+              </button>
+            </div>
             <Test1
               selectedOptions={selectedOptions}
               setSelectedOptions={setSelectedOptions}
             />
-
             <Test2
               selectedOption={selectedOption}
               setSelectedOption={setSelectedOption}
@@ -424,7 +429,6 @@ const Analysis = () => {
               selectedOption={selectedOption2}
               setSelectedOption={setSelectedOption2}
             />
-
             <Test5
               selectedOption={selectedOption3}
               setSelectedOption={setSelectedOption3}
@@ -484,7 +488,6 @@ const Analysis = () => {
             />
           )
         : null}
-      {/* onClick={generatePDF} */}
       {currentStep === 3 && (
         <div>
           <div style={{ textAlign: "center" }}>
@@ -498,12 +501,7 @@ const Analysis = () => {
           </div>
           <div className="test-btnn">
             <button onClick={() => prevStep()}>Back</button>
-            <button
-              onClick={handleSubmit}
-              // style={{ padding: "10px 20px", fontSize: "14px", marginTop: "10px" }}
-            >
-              Submit
-            </button>
+            <button onClick={handleSubmit}>Submit</button>
           </div>
         </div>
       )}

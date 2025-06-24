@@ -1,32 +1,32 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import React, { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 // import { toast, ToastContainer } from 'react-toastify';
 // import { useDispatch, useSelector } from 'react-redux';
 
-import { getCartItems } from '../products/CartSlice';
-import html2pdf from 'html2pdf.js';
-import BASE_URL from '../Config';
-import "./PrescriptionUser.css"
+import { getCartItems } from "../products/CartSlice";
+import html2pdf from "html2pdf.js";
+import BASE_URL from "../Config";
+import "./PrescriptionUser.css";
 
-export default function PrescriptionUser({data}) {
+export default function PrescriptionUser({ data }) {
   const [loading, setLoading] = useState(false);
   const params = useParams();
   // const dispatch = useDispatch();
 
   let storedUserData = JSON.parse(localStorage?.getItem("User343"));
   const userId = storedUserData?.logedInUser?.user._id;
-  const [prescriptionM,setPrescriptionM] = useState({});
+  const [prescriptionM, setPrescriptionM] = useState({});
 
   useEffect(() => {
-    console.log("koejgt",data.test6?.medicines?.[0]?.medicines)
-    setPrescriptionM(data.test6?.medicines?.[0]?.medicines)
-  },[data.test6?.medicines?.[0]?.medicines])
+    console.log("koejgt", data.test6?.medicines?.[0]?.medicines);
+    setPrescriptionM(data.test6?.medicines?.[0]?.medicines);
+  }, [data.test6?.medicines?.[0]?.medicines]);
 
   const [cartItemsNew, setCartItemsNew] = useState([]);
-  const [cartStatus, setCartStatus] = useState('idle');
+  const [cartStatus, setCartStatus] = useState("idle");
   const [cartError, setCartError] = useState(null);
 
   // const cartItems = useSelector((state) => state.cart.items);
@@ -36,93 +36,97 @@ export default function PrescriptionUser({data}) {
   useEffect(() => {
     const fetchCartItems = async () => {
       try {
-        setCartStatus('loading');
+        setCartStatus("loading");
         // Assuming CartApi.js exists and getCartItemsApi fetches data
         // You might need to adjust the API call based on your actual implementation
-        const response = await fetch(`${BASE_URL}/cart/get-cart-items?userId=${userId}`,{
-           headers: {
-            'Authorization': storedUserData.logedInUser.accessToken,
-          },
-        });
+        const response = await fetch(
+          `${BASE_URL}/cart/get-cart-items?userId=${userId}`,
+          {
+            headers: {
+              Authorization: storedUserData.logedInUser.accessToken,
+            },
+          }
+        );
         const data = await response.json();
         setCartItemsNew(data.items);
-        setCartStatus('succeeded');
+        setCartStatus("succeeded");
       } catch (error) {
-        setCartStatus('failed');
+        setCartStatus("failed");
         setCartError(error);
-        console.error('Error fetching cart items:', error);
+        console.error("Error fetching cart items:", error);
       }
     };
 
     if (userId) {
       fetchCartItems();
     }
+  }, [userId]);
 
-  },[userId])
-
-
-  useEffect(() => {
-    //  setCartItemsNew(cartItems)
-  },[/* cartItems */]) // Removed cartItems dependency
+  useEffect(
+    () => {
+      //  setCartItemsNew(cartItems)
+    },
+    [
+      /* cartItems */
+    ]
+  ); // Removed cartItems dependency
   const contentRef = useRef();
-
 
   if (!data) {
     return <h2>Error</h2>;
   }
-  
-
-
-
 
   const handleAddToCart = async () => {
-    let data = cartItemsNew?.map((e) => {
+    let data = cartItemsNew?.map(e => {
       return {
-        item  : e?.item,
-        quantity : e?.quantity,
+        item: e?.item,
+        quantity: e?.quantity,
       };
     });
     try {
-      setLoader(true)
-      const response = await fetch(`${BASE_URL}/cart/update-cart?userId=${userId}`, {
-        method: 'POST',
-        headers: {
-          'Authorization': storedUserData.logedInUser.accessToken,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(cartItemsNew),
-      });
-      setLoader(false)
+      setLoader(true);
+      const response = await fetch(
+        `${BASE_URL}/cart/update-cart?userId=${userId}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: storedUserData.logedInUser.accessToken,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(cartItemsNew),
+        }
+      );
+      setLoader(false);
       if (response.ok) {
         const result = await response.json();
         // toast.success("review created successfully");
-        console.log('review created successfully:', result);
-        navigate("/create-order")
+        console.log("review created successfully:", result);
+        navigate("/create-order");
       } else {
-        console.error('Failed to create review:', response.statusText);
+        console.error("Failed to create review:", response.statusText);
       }
     } catch (error) {
-      setLoader(false)
-      console.error('Error:', error);
+      setLoader(false);
+      console.error("Error:", error);
     }
   };
   const formatDate = () => {
     const date = new Date();
     const options = {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
     };
-    return date.toLocaleString('en-GB', options).replace(',', '');
+    return date.toLocaleString("en-GB", options).replace(",", "");
   };
 
-// let medData=data.test6.medicines[0].medicines
-let medData = data.test6?.medicines?.[0]?.medicines || {};
-console.log("koejgt",medData)
+  // let medData=data.test6.medicines[0].medicines
+  let medData = data.test6?.medicines?.[0]?.medicines || {};
+  console.log("koejgt", medData);
 
   // const generatePDF = () => {
   //   setLoading(true);
@@ -139,7 +143,6 @@ console.log("koejgt",medData)
   //   });
   // };
 
-
   const generatePDF = () => {
     setLoading(true);
 
@@ -147,23 +150,22 @@ console.log("koejgt",medData)
     const opt = {
       margin: 0.5, // Top, left, bottom, right margins
       filename: `Prescription.pdf`,
-      image: { type: 'jpeg', quality: 0.7 },
+      image: { type: "jpeg", quality: 0.7 },
       html2canvas: { scale: 1.5, useCORS: true }, // Use high scale for better quality
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
       // pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
     };
 
     html2pdf().from(element).set(opt).save();
     setLoading(false);
-    toast.success('PDF generated successfully');
+    toast.success("PDF generated successfully");
   };
 
   let p = 7;
-  
 
   return (
     <div>
-      <div style={{ justifyContent: "center" }} className='d-flex'>
+      <div style={{ justifyContent: "center" }} className="d-flex">
         {!data?.preview && (
           <button className="pdf" onClick={generatePDF}>
             {loading
@@ -171,20 +173,23 @@ console.log("koejgt",medData)
               : "Generate and Download PDF"}
           </button>
         )}
-        <div style={{    display: "flex",
-    margin:"0 0 0 10px",
-    }}>
-                      {!data?.preview && (
-          <button className="pdf-1" style={{backgroundColor: "#c7c74d"}} onClick={handleAddToCart}>
-            {loader
-              ? "Please wait"
-              : "Buy"}
-          </button>
-        )}
+        <div style={{ display: "flex", margin: "0 0 0 10px" }}>
+          {!data?.preview && (
+            <button
+              className="pdf-1"
+              style={{ backgroundColor: "#c7c74d" }}
+              onClick={handleAddToCart}
+            >
+              {loader ? "Please wait" : "Buy"}
+            </button>
+          )}
         </div>
-
       </div>
-      <div id="report" className="report-container page-break-2"  ref={contentRef}>
+      <div
+        id="report"
+        className="report-container page-break-2"
+        ref={contentRef}
+      >
         <div className="heading-container">
           <div className="image-container">
             <img className="rx-logo" src="/RX.png" alt="RX Logo" />
@@ -195,8 +200,12 @@ console.log("koejgt",medData)
             />
           </div>
           <div className="time-detail">
-          <div style={{fontSize : "16px",fontWeight : "600"}}>Ref no: <span>EFA3E6F55</span></div>
-          <div  style={{fontSize : "16px",fontWeight : "600"}}>Date and Time: <span>{formatDate()}</span></div>
+            <div style={{ fontSize: "16px", fontWeight: "600" }}>
+              Ref no: <span>EFA3E6F55</span>
+            </div>
+            <div style={{ fontSize: "16px", fontWeight: "600" }}>
+              Date and Time: <span>{formatDate()}</span>
+            </div>
           </div>
           {/* <div>
             <h2 className='color-head-blue'>Dr Amit Agarkar</h2>
@@ -236,7 +245,7 @@ console.log("koejgt",medData)
             Doctor's Note/ Provisional Diagnosis
           </h5>
           {data?.dianosis?.map((item, index) => (
-            <div key={index} style={{fontSize : "14px",fontWeight:"600"}}>
+            <div key={index} style={{ fontSize: "14px", fontWeight: "600" }}>
               <div>
                 {index + 1}) {item.option}
               </div>
@@ -257,7 +266,7 @@ console.log("koejgt",medData)
               data.bloodTest.mainTests.map((test, index) => (
                 <div key={index} className="input-med-1">
                   <input type="checkbox" checked={true} readOnly />
-                  <p className='lab-test-1'>{test}</p>
+                  <p className="lab-test-1">{test}</p>
 
                   {test === "Blood Sugar" && (
                     <div className="sub-input-med">
@@ -265,7 +274,7 @@ console.log("koejgt",medData)
                         (subTest, subIndex) => (
                           <div key={subIndex} className="input-med-1">
                             <input type="checkbox" checked={true} readOnly />
-                            <p className='lab-test-1'>{subTest}</p>
+                            <p className="lab-test-1">{subTest}</p>
                           </div>
                         )
                       )}
@@ -295,9 +304,17 @@ console.log("koejgt",medData)
                 </div>
                 <div>
                   <div>
-                    {Object.keys(prescriptionM || {}).map((it,ind) => {
+                    {Object.keys(prescriptionM || {}).map((it, ind) => {
                       return (
-                        <div className={`d-flex flex-column ${ind+1 == p || ind+1 == (10+p) || ind+1 == (20+p) ? "page-break-1" : ""}`}>
+                        <div
+                          className={`d-flex flex-column ${
+                            ind + 1 == p ||
+                            ind + 1 == 10 + p ||
+                            ind + 1 == 20 + p
+                              ? "page-break-1"
+                              : ""
+                          }`}
+                        >
                           <div
                             className="d-flex"
                             style={{ fontSize: "16px", fontWeight: "600" }}
@@ -314,10 +331,18 @@ console.log("koejgt",medData)
                               {it} X {prescriptionM[it].quantity}
                             </div>
                           </div>
-                          <div style={{ margin: "0 0 6px 25px",ontSize: "13px", fontWeight: "600" }}>{`${
-                            prescriptionM[it].dosage
-                          } ${prescriptionM[it].route} ${prescriptionM[it].frequency}  ${
-                            prescriptionM[it].route === "Oral" ? prescriptionM[it].when : ""
+                          <div
+                            style={{
+                              margin: "0 0 6px 25px",
+                              ontSize: "13px",
+                              fontWeight: "600",
+                            }}
+                          >{`${prescriptionM[it].dosage} ${
+                            prescriptionM[it].route
+                          } ${prescriptionM[it].frequency}  ${
+                            prescriptionM[it].route === "Oral"
+                              ? prescriptionM[it].when
+                              : ""
                           } ${prescriptionM[it].duration} ${
                             prescriptionM[it].instructions
                           }`}</div>
@@ -372,16 +397,16 @@ console.log("koejgt",medData)
           <div>4. Not Valid for Medico-legal purpose.</div>
         </div>
       </div>
-      <div style={{    display: "flex",
-    justifyContent: "end"}}>
-      <button className="pdf-1" style={{backgroundColor: "#c7c74d"}} onClick={handleAddToCart}>
-            {loader
-              ? "Please wait"
-              : "Buy"}
-          </button>
+      <div style={{ display: "flex", justifyContent: "end" }}>
+        <button
+          className="pdf-1"
+          style={{ backgroundColor: "#c7c74d" }}
+          onClick={handleAddToCart}
+        >
+          {loader ? "Please wait" : "Buy"}
+        </button>
       </div>
-      <ToastContainer position="bottom-right"/>
-
+      <ToastContainer position="bottom-right" />
     </div>
   );
 }
