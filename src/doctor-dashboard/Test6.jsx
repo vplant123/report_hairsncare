@@ -236,12 +236,11 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
         const data = await response.json();
         setKitItems(data.message);
 
-        // Pre-select medicines from selectedOptions
+        // Pre-select medicines from selectedOptions - only exact name matches
         if (selectedOptions?.medicines?.length > 0) {
           const preSelectedKits = data.message.filter((kit) =>
             selectedOptions.medicines.some(
-              (medicine) =>
-                medicine.name === kit.name || kit.kit.includes(medicine.name)
+              (medicine) => medicine.name === kit.name
             )
           );
           setCurrentKits(preSelectedKits);
