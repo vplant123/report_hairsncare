@@ -241,6 +241,58 @@ export default function Test6({
         ))}
       </div>
 
+      
+      <h2 className="diag1">Tests</h2>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          backgroundColor: "#90ff90",
+          padding: "1rem",
+        }}
+      >
+        {tests.map((test) => (
+          <label
+            key={test}
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+          >
+            <input
+              type="checkbox"
+              checked={selectedTests.mainTests.includes(test)}
+              onChange={() => handleMainCheckboxChange(test)}
+            />
+            {test}
+          </label>
+        ))}
+      </div>
+
+      {selectedTests.mainTests.includes("Blood Sugar") && (
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            backgroundColor: "#90ff90",
+            padding: "1rem",
+          }}
+        >
+          {bloodSugarSubTests.map((subTest) => (
+            <label
+              key={subTest}
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+            >
+              <input
+                type="checkbox"
+                checked={
+                  selectedTests.subTests["Blood Sugar"]?.includes(subTest) ||
+                  false
+                }
+                onChange={() => handleSubCheckboxChange("Blood Sugar", subTest)}
+              />
+              {subTest}
+            </label>
+          ))}
+        </div>
+      )}
       <div style={{ margin: "1rem 0" }}>
         <label style={{ marginRight: "1rem" }}>Add New Medicine:</label>
         <input
@@ -252,7 +304,6 @@ export default function Test6({
         />
         <button onClick={handleAddMedicine}>Add</button>
       </div>
-
       {(selectedMedicines.length > 0 || addedMedicines.length > 0) && (
         <div>
           <h2>Instructions</h2>
@@ -308,57 +359,7 @@ export default function Test6({
         </div>
       )}
 
-      <h2 className="diag1">Tests</h2>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          backgroundColor: "#90ff90",
-          padding: "1rem",
-        }}
-      >
-        {tests.map((test) => (
-          <label
-            key={test}
-            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-          >
-            <input
-              type="checkbox"
-              checked={selectedTests.mainTests.includes(test)}
-              onChange={() => handleMainCheckboxChange(test)}
-            />
-            {test}
-          </label>
-        ))}
-      </div>
-
-      {selectedTests.mainTests.includes("Blood Sugar") && (
-        <div
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            backgroundColor: "#90ff90",
-            padding: "1rem",
-          }}
-        >
-          {bloodSugarSubTests.map((subTest) => (
-            <label
-              key={subTest}
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <input
-                type="checkbox"
-                checked={
-                  selectedTests.subTests["Blood Sugar"]?.includes(subTest) ||
-                  false
-                }
-                onChange={() => handleSubCheckboxChange("Blood Sugar", subTest)}
-              />
-              {subTest}
-            </label>
-          ))}
-        </div>
-      )}
+      
     </>
   );
 }
