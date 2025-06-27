@@ -541,7 +541,7 @@ const PatientTestResult = () => {
             </button>
           </div>
         )}
-        <button
+        {/* <button
           onClick={() => nextStep()}
           style={{
             padding: "0.75rem 2rem",
@@ -586,7 +586,7 @@ const PatientTestResult = () => {
             <path d="M20 6L9 17l-5-5" />
           </svg>
           Assessment Save, and Continue
-        </button>
+        </button> */}
       </div>
       <ToastContainer
         position="bottom-right"

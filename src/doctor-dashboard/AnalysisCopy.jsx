@@ -59,12 +59,12 @@ const AnalysisCopy = () => {
         }
       );
 
-      if (prescriptionData.data?.test6?.medicines) {
-        setSelectedOptions4({
-          medicines: prescriptionData.data.test6.medicines,
-          followUpDate: prescriptionData.data.test6.followUpDate || "",
-        });
-      }
+      // if (prescriptionData.data?.test6?.medicines) {
+      //   setSelectedOptions4({
+      //     medicines: prescriptionData.data.test6.medicines,
+      //     followUpDate: prescriptionData.data.test6.followUpDate || "",
+      //   });
+      // }
 
       // Fetch hair test data
       const hairTestResponse = await fetch(
