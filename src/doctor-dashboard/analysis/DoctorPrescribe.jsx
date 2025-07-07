@@ -83,15 +83,15 @@ function DoctorPrescribe({
                         <option value="Tablets">Hair Solution</option>
                         <option value="Syrup">Serum</option>
                         <option value="Sachets">Oil</option>
-                        <option value="Syrup">Gel</option>
-                        <option value="Syrup">Mask</option>
-                        <option value="Syrup">Cream & Ointments</option>
-                        <option value="Syrup">Shampoo</option>
-                        <option value="Syrup">Conditioner</option>
-                        <option value="Syrup">Color</option>
-                        <option value="Syrup">Spray</option>
-                        <option value="Syrup">Foam</option>
-                        <option value="Syrup">Fibre</option>
+                        <option value="Gel">Gel</option>
+                        <option value="Mask">Mask</option>
+                        <option value="Cream & Ointments">Cream & Ointments</option>
+                        <option value="Shampoo">Shampoo</option>
+                        <option value="Conditioner">Conditioner</option>
+                        <option value="Color">Color</option>
+                        <option value="Spray">Spray</option>
+                        <option value="Foam">Foam</option>
+                        <option value="Fibre">Fibre</option>
                       </>
                     )}
                   </select>
@@ -138,11 +138,12 @@ function DoctorPrescribe({
                 </td>
                 <td>
                   <select
-                    value={prescriptions[medicine]?.when || "Before food"}
+                    value={prescriptions[medicine]?.when || ""}
                     onChange={(e) =>
                       handleChange(medicine, "when", e.target.value)
                     }
                   >
+                    <option value="">Select</option>
                     <option value="Before food">Before food</option>
                     <option value="After food">After food</option>
                     <option value="Empty stomach">Empty stomach</option>

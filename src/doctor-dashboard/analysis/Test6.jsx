@@ -24,7 +24,7 @@ export default function Test6({
       quantity: "1",
       dosage: "",
       frequency: "Daily at night",
-      when: "Before food",
+      when: "",
       duration: "1 month",
       instructions: "",
     };
@@ -138,7 +138,7 @@ export default function Test6({
         quantity: "1",
         dosage: "",
         frequency: "Daily at night",
-        when: "Before food",
+        when: "",
         duration: "1 month",
         instructions: "",
       };

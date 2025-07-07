@@ -36,7 +36,7 @@ const PrescriptionUser = ({ data }) => {
               quantity: details.quantity || "1",
               dosage: details.dosage || "",
               frequency: details.frequency || "Daily at night",
-              when: details.when || "Before food",
+              when: details.when || "",
               duration: details.duration || "1 month",
               instructions: details.instructions || "",
             };
@@ -54,7 +54,7 @@ const PrescriptionUser = ({ data }) => {
             quantity: medicine.quantity || "1",
             dosage: medicine.dosage || "",
             frequency: medicine.frequency || "Daily at night",
-            when: medicine.when || "Before food",
+            when: medicine.when || "",
             duration: medicine.duration || "1 month",
             instructions: medicine.instructions || "",
           },
