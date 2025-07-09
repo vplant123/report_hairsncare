@@ -49,13 +49,13 @@ const PrescriptionUser = ({ data }) => {
           {
             name: medicine.name,
             kit: medicine.name,
-            route: medicine.route || "Oral",
-            subCategory: medicine.subCategory || "Tablets",
+            route: medicine.route || "",
+            subCategory: medicine.subCategory || "",
             quantity: medicine.quantity || "1",
             dosage: medicine.dosage || "",
-            frequency: medicine.frequency || "Daily at night",
+            frequency: medicine.frequency || "",
             when: medicine.when || "",
-            duration: medicine.duration || "1 month",
+            duration: medicine.duration || "",
             instructions: medicine.instructions || "",
           },
         ];
@@ -425,9 +425,9 @@ const PrescriptionUser = ({ data }) => {
                         }}
                       >
                         {`${medicine.dosage || ""} ${
-                          medicine.route || "Oral"
-                        } ${medicine.subCategory || "Tablets"} ${
-                          medicine.frequency || "Daily"
+                          medicine.route || ""
+                        } ${medicine.subCategory || ""} ${
+                          medicine.frequency || ""
                         } ${medicine.when || ""} ${medicine.duration || ""} ${
                           medicine.instructions || ""
                         }`}

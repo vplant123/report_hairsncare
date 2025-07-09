@@ -67,7 +67,7 @@ function DoctorPrescribe({
                 </td>
                 <td>
                   <select
-                    value={prescriptions[medicine]?.subCategory || ""}
+                    value={prescriptions[medicine]?.subCategory || "Tablets"}
                     onChange={(e) =>
                       handleChange(medicine, "subCategory", e.target.value)
                     }
@@ -80,9 +80,9 @@ function DoctorPrescribe({
                       </>
                     ) : (
                       <>
-                        <option value="Tablets">Hair Solution</option>
-                        <option value="Syrup">Serum</option>
-                        <option value="Sachets">Oil</option>
+                        <option value="Hair Solution">Hair Solution</option>
+                        <option value="Serum">Serum</option>
+                        <option value="Oil">Oil</option>
                         <option value="Gel">Gel</option>
                         <option value="Mask">Mask</option>
                         <option value="Cream & Ointments">Cream & Ointments</option>
@@ -119,12 +119,13 @@ function DoctorPrescribe({
                 <td>
                   <select
                     value={
-                      prescriptions[medicine]?.frequency || "Daily at night"
+                      prescriptions[medicine]?.frequency || ""
                     }
                     onChange={(e) =>
                       handleChange(medicine, "frequency", e.target.value)
                     }
                   >
+                   
                     <option value="Daily at night">Daily at night</option>
                     <option value="Daily at morning">Daily at morning</option>
                     <option value="Daily at afternoon">
@@ -143,7 +144,7 @@ function DoctorPrescribe({
                       handleChange(medicine, "when", e.target.value)
                     }
                   >
-                    <option value="">Select</option>
+                    <option value="">-</option>
                     <option value="Before food">Before food</option>
                     <option value="After food">After food</option>
                     <option value="Empty stomach">Empty stomach</option>

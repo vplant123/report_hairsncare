@@ -212,13 +212,13 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
       const initialPrescriptions = {};
       selectedOptions.medicines.forEach((medicine) => {
         initialPrescriptions[medicine.name] = {
-          route: medicine.route || "Oral",
-          subCategory: medicine.subCategory || "Tablets",
+          route: medicine.route || "",
+          subCategory: medicine.subCategory || "",
           quantity: medicine.quantity || "1",
           dosage: medicine.dosage || "",
-          frequency: medicine.frequency || "Daily at night",
-          when: medicine.when || "Before food",
-          duration: medicine.duration || "1 month",
+          frequency: medicine.frequency || "",
+          when: medicine.when || "",
+          duration: medicine.duration || "",
           instructions: medicine.instructions || "",
         };
       });
@@ -271,13 +271,13 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
     // Maintain flat structure for medicines
     const medicinesData = selectedOptions.medicines.map((medicine) => ({
       name: medicine.name,
-      route: prescriptions[medicine.name]?.route || "Oral",
-      subCategory: prescriptions[medicine.name]?.subCategory || "Tablets",
+      route: prescriptions[medicine.name]?.route || "",
+      subCategory: prescriptions[medicine.name]?.subCategory || "",
       quantity: prescriptions[medicine.name]?.quantity || "1",
       dosage: prescriptions[medicine.name]?.dosage || "",
-      frequency: prescriptions[medicine.name]?.frequency || "Daily at night",
-      when: prescriptions[medicine.name]?.when || "Before food",
-      duration: prescriptions[medicine.name]?.duration || "1 month",
+      frequency: prescriptions[medicine.name]?.frequency || "",
+      when: prescriptions[medicine.name]?.when || "",
+      duration: prescriptions[medicine.name]?.duration || "",
       instructions: prescriptions[medicine.name]?.instructions || "",
       price: medicine.price,
       description: medicine.description,

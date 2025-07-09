@@ -137,9 +137,9 @@ export default function Test6({
         subCategory: "Tablets",
         quantity: "1",
         dosage: "",
-        frequency: "Daily at night",
+        frequency: "",
         when: "",
-        duration: "1 month",
+        duration: "",
         instructions: "",
       };
       return acc;
