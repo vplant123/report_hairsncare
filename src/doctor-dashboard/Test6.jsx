@@ -311,7 +311,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
           padding: "1rem",
         }}
       >
-        {kitItems?.map((kit) => (
+        {kitItems?.map(kit => (
           <div
             key={kit._id}
             style={{
@@ -333,17 +333,22 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               <input
                 type="checkbox"
                 checked={currentKits.some(
-                  (selectedKit) => selectedKit._id === kit._id
+                  selectedKit => selectedKit._id === kit._id
                 )}
                 onChange={() => handleCheckboxChange(kit)}
               />
               <div>
                 <h2>{kit.name}</h2>
+
                 {kit.kit.length > 0 && (
                   <div>
-                    {kit.kit.map((item) => (
+                    {kit.kit.map(item => (
                       <p key={item}>{item}</p>
                     ))}
+                    <span>
+                      {" "}
+                      <h6>Stock: {kit.stock}</h6>
+                    </span>
                   </div>
                 )}
               </div>
@@ -356,7 +361,7 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
         <div>
           <h2>Instructions for Selected Medicines</h2>
           <DoctorPrescribe
-            medicines={selectedOptions.medicines.map((med) => med.name)}
+            medicines={selectedOptions.medicines.map(med => med.name)}
             prescriptions={prescriptions}
             setPrescriptions={setPrescriptions}
           />
@@ -379,12 +384,12 @@ export default function Test6({ selectedOptions, setSelectedOptions }) {
               justifyContent: "center",
               gap: "8px",
             }}
-            onMouseOver={(e) => {
+            onMouseOver={e => {
               e.currentTarget.style.backgroundColor = "#45a049";
               e.currentTarget.style.transform = "translateY(-2px)";
               e.currentTarget.style.boxShadow = "0 4px 8px rgba(0,0,0,0.2)";
             }}
-            onMouseOut={(e) => {
+            onMouseOut={e => {
               e.currentTarget.style.backgroundColor = "#4CAF50";
               e.currentTarget.style.transform = "translateY(0)";
               e.currentTarget.style.boxShadow = "0 2px 4px rgba(0,0,0,0.2)";

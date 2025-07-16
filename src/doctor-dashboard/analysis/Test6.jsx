@@ -52,6 +52,7 @@ export default function Test6({
       try {
         const response = await fetch(`${BASE_URL}/admin/product`);
         const data = await response.json();
+        console.log("medicines", data);
         setKitItems(data.message);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -213,7 +214,7 @@ export default function Test6({
           padding: "1rem",
         }}
       >
-        {kitItems?.map((kit) => (
+        {kitItems?.map(kit => (
           <div
             key={kit._id}
             style={{
@@ -227,21 +228,24 @@ export default function Test6({
             >
               <input
                 type="checkbox"
-                checked={currentKits.some((k) => k._id === kit._id)}
+                checked={currentKits.some(k => k._id === kit._id)}
                 onChange={() => handleCheckboxChange(kit)}
               />
               <div>
                 <h3>{kit.name}</h3>
                 {Array.isArray(kit.kit) &&
                   kit.kit.length > 0 &&
-                  kit.kit.map((item) => <p key={item}>{item}</p>)}
+                  kit.kit.map(item => <p key={item}>{item}</p>)}
+                <span>
+                  {" "}
+                  <h6>Stock: {kit.stock}</h6>
+                </span>
               </div>
             </label>
           </div>
         ))}
       </div>
 
-      
       <h2 className="diag1">Tests</h2>
       <div
         style={{
@@ -251,7 +255,7 @@ export default function Test6({
           padding: "1rem",
         }}
       >
-        {tests.map((test) => (
+        {tests.map(test => (
           <label
             key={test}
             style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -275,7 +279,7 @@ export default function Test6({
             padding: "1rem",
           }}
         >
-          {bloodSugarSubTests.map((subTest) => (
+          {bloodSugarSubTests.map(subTest => (
             <label
               key={subTest}
               style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
@@ -298,7 +302,7 @@ export default function Test6({
         <input
           type="text"
           value={newMedicine}
-          onChange={(e) => setNewMedicine(e.target.value)}
+          onChange={e => setNewMedicine(e.target.value)}
           placeholder="Enter medicine name"
           style={{ padding: "0.5rem", marginRight: "0.5rem" }}
         />
@@ -309,7 +313,7 @@ export default function Test6({
           <h2>Instructions</h2>
           <div>
             {[...new Set([...selectedMedicines, ...addedMedicines])].map(
-              (med) => (
+              med => (
                 <div>
                   <DoctorPrescribe
                     medicines={[med]}
@@ -327,7 +331,7 @@ export default function Test6({
             <input
               type="date"
               value={followUpDate}
-              onChange={(e) => setFollowUpDate(e.target.value)}
+              onChange={e => setFollowUpDate(e.target.value)}
               min={new Date().toISOString().split("T")[0]}
               style={{ padding: "0.5rem" }}
             />
@@ -358,8 +362,6 @@ export default function Test6({
           </div>
         </div>
       )}
-
-      
     </>
   );
 }
