@@ -76,6 +76,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="General Diet for Hair Loss"
+            checked={selectedOptions['Nutrition']?.includes("General Diet for Hair Loss") || true}
             onChange={(e) =>
               handleCheckboxChange('Nutrition', e.target.value, e.target.checked)
             }
@@ -131,6 +132,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="General Lifestyle Advice"
+            checked={selectedOptions['LifeStyle']?.includes("General Lifestyle Advice") || true}
             onChange={(e) =>
               handleCheckboxChange('LifeStyle', e.target.value, e.target.checked)
             }
@@ -156,6 +158,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="Mild to Moderate Stress Management"
+            checked={selectedOptions['Stress']?.includes("Mild to Moderate Stress Management") || true}
             onChange={(e) =>
               handleCheckboxChange('Stress', e.target.value, e.target.checked)
             }
@@ -167,6 +170,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="Stress Management Severe"
+            checked={selectedOptions['Stress']?.includes("Stress Management Severe") || true}
             onChange={(e) =>
               handleCheckboxChange('Stress', e.target.value, e.target.checked)
             }
