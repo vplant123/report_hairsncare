@@ -1,6 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
+
+  useEffect(() => {
+    let updated = false;
+    let newSelected = { ...selectedOptions };
+    if (!selectedOptions['Nutrition']?.includes('General Diet for Hair Loss')) {
+      newSelected.Nutrition = [...(selectedOptions.Nutrition || []), 'General Diet for Hair Loss'];
+      updated = true;
+    }
+    if (!selectedOptions['LifeStyle']?.includes('General Lifestyle Advice')) {
+      newSelected.LifeStyle = [...(selectedOptions.LifeStyle || []), 'General Lifestyle Advice'];
+      updated = true;
+    }
+    if (updated) {
+      setSelectedOptions(newSelected);
+    }
+  }, []);
 
 
   const handleCheckboxChange = (category, value, checked) => {
@@ -76,7 +92,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="General Diet for Hair Loss"
-            checked={selectedOptions['Nutrition']?.includes("General Diet for Hair Loss") || true}
+            checked={selectedOptions['Nutrition']?.includes("General Diet for Hair Loss") || false }
             onChange={(e) =>
               handleCheckboxChange('Nutrition', e.target.value, e.target.checked)
             }
@@ -132,7 +148,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="General Lifestyle Advice"
-            checked={selectedOptions['LifeStyle']?.includes("General Lifestyle Advice") || true}
+            checked={selectedOptions['LifeStyle']?.includes("General Lifestyle Advice") || false}
             onChange={(e) =>
               handleCheckboxChange('LifeStyle', e.target.value, e.target.checked)
             }
@@ -158,7 +174,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="Mild to Moderate Stress Management"
-            checked={selectedOptions['Stress']?.includes("Mild to Moderate Stress Management") || true}
+            checked={selectedOptions['Stress']?.includes("Mild to Moderate Stress Management") || false}
             onChange={(e) =>
               handleCheckboxChange('Stress', e.target.value, e.target.checked)
             }
@@ -170,7 +186,7 @@ const Test7 = ({selectedOptions, setSelectedOptions,nextStep,prevStep}) => {
           <input
             type="checkbox"
             value="Stress Management Severe"
-            checked={selectedOptions['Stress']?.includes("Stress Management Severe") || true}
+            checked={selectedOptions['Stress']?.includes("Stress Management Severe") || false}
             onChange={(e) =>
               handleCheckboxChange('Stress', e.target.value, e.target.checked)
             }
