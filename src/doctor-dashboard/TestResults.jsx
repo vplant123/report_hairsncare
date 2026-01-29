@@ -39,7 +39,7 @@ export default function TestResults() {
 
   console.log(data1[0], "api data");
   return (
-    <div className="p-6">
+    <div className="p-6 m-5">
       <div className="test-link container">
         <div className="test-link-item">
           <div
@@ -378,10 +378,24 @@ export default function TestResults() {
                                   {typeof e == "object" ? (
                                     <label>
                                       <img src={e?.src} alt={e?.name} />
-                                      <p>{e?.name}</p>
+                                      {e?.name && !['none', 'normal'].includes(e.name.toLowerCase()) && (
+                                        <p>{e.name}</p>
+                                      )}
                                     </label>
                                   ) : (
-                                    <label>{e}</label>
+                                    <div className="option">
+                                      {e.length <= 10 ? (
+                                        // Short text: perfect circle
+                                        <div className="circle">
+                                          {e}
+                                        </div>
+                                      ) : (
+                                        // Long text: rectangle
+                                        <div className="rectangle">
+                                          {e}
+                                        </div>
+                                      )}
+                                    </div>
                                   )}
                                 </>
                               );
@@ -392,18 +406,24 @@ export default function TestResults() {
                                 src={question.option.src}
                                 alt={question.option.name}
                               />
-                              <p>{question.option.name}</p>
+                              {question.option.name && !['none', 'normal'].includes(question.option.name.toLowerCase()) && (
+                                <p>{question.option.name}</p>
+                              )}
                             </label>
                           )
                         ) : (
-                          <div
-                            className={`option ${
-                              typeof question.option === "string"
-                                ? "circle"
-                                : ""
-                            }`}
-                          >
-                            <div className="circle">{question.option}</div>
+                          <div className="option">
+                            {question.option.length <= 10 ? (
+                              // Short text: perfect circle
+                              <div className="circle">
+                                {question.option}
+                              </div>
+                            ) : (
+                              // Long text: rectangle
+                              <div className="rectangle">
+                                {question.option}
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>
@@ -446,6 +466,7 @@ export default function TestResults() {
                                           <img
                                             src={subQuestion.option.src}
                                             alt={subQuestion.option.name}
+                                            class="circle"
                                           />
                                           <p>{subQuestion.option.name}</p>
                                         </label>
@@ -472,6 +493,102 @@ export default function TestResults() {
                     </div>
                   ))}
                 </div>
+                // <div key={stepIndex}>
+                //   {step.map((question, questionIndex) => (
+                //     <div key={questionIndex}>
+                //       <h3>{question.question}</h3>
+                //       <div className="options-container" style={{display:"flex",flexDirection : "column"}}>
+                //         {typeof question.option === 'object' ? (
+                //           question.option?.length > 0 ? question?.option?.map((e) => {
+                //             return(
+                //               <>
+                //               {typeof e == 'object' ?  <label>
+                //               <img loading="lazy"  src={e?.src} alt={e?.name} />
+                //               {e?.name && !['none', 'normal'].includes(e.name.toLowerCase()) && (
+                //                 <p>{e.name}</p>
+                //               )}
+                //             </label>  : <div className="option">
+                //             {e.length <= 10 ? (
+                //               // Short text: perfect circle
+                //               <div className="circle">
+                //                 {e}
+                //               </div>
+                //             ) : (
+                //               // Long text: rectangle
+                //               <div className="rectangle">
+                //                 {e}
+                //               </div>
+                //             )}
+                //           </div>}
+                //               </>
+                            
+                //             )
+                //           })       :            <label>
+                //           <img loading="lazy"  src={question.option.src} alt={question.option.name} />
+                //           {question.option.name && !['none', 'normal'].includes(question.option.name.toLowerCase()) && (
+                //                 <p>{question.option.name}</p>
+                //               )}
+                          
+                //         </label>
+
+                //         ) : (
+                //           // <div className={`option ${typeof question.option === 'string' ? 'circle' : ''}`}>
+                //           //   <div className="circle">
+                //           //     {question.option}
+                //           //   </div>
+                //           // </div>
+                //           <div className="option">
+                //             {question.option.length <= 10 ? (
+                //               // Short text: perfect circle
+                //               <div className="circle">
+                //                 {question.option}
+                //               </div>
+                //             ) : (
+                //               // Long text: rectangle
+                //               <div className="rectangle">
+                //                 {question.option}
+                //               </div>
+                //             )}
+                //           </div>
+
+                //         )}
+                //       </div>
+                //       {/* Render subquestions if available */}
+                //       {question.subquestions && question.subquestions.length > 0 && (
+                //         <div className="subquestions">
+                //           {question.subquestions.map((subQuestion, subQuestionIndex) => (
+                //             <div key={subQuestionIndex}>
+                //               <h4>{subQuestion.subQuestion}</h4>
+                //               <div className="options-container" style={{display:"flex",flexDirection : "column"}}>
+                //                 {typeof subQuestion.option === 'object' ? (
+                //                   subQuestion?.option?.length > 0 ? subQuestion?.option?.map((e) => {
+                //                     return(
+                //                       <>
+                //                                         {typeof e == 'object' ?  <label>
+                //               <img loading="lazy"  src={e?.src} alt={e?.name} />
+                //               <p>{e?.name}</p>
+                //             </label>  : <label>{e}</label>}
+                //                       </>
+                //                     )
+                //                   })       :            <label>
+                //                     <img loading="lazy" class="circle" src={subQuestion.option.src} alt={subQuestion.option.name} />
+                //                     <p>{subQuestion.option.name}</p>
+                //                   </label>
+                //                 ) : (
+                //                   <div className={`option ${typeof subQuestion.option === 'string' ? 'circle' : ''}`}>
+                //                     <div className="circle">
+                //                       {subQuestion.option}
+                //                     </div>
+                //                   </div>
+                //                 )}
+                //               </div>
+                //             </div>
+                //           ))}
+                //         </div>
+                //       )}
+                //     </div>
+                //   ))}
+                // </div>
               ))}
           </>
         ) : (
